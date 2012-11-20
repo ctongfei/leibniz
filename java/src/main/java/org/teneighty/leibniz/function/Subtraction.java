@@ -23,6 +23,8 @@
  */ 
 package org.teneighty.leibniz.function;
 
+import java.io.Serializable;
+
 import org.teneighty.leibniz.AbstractComposedDifferentiable;
 import org.teneighty.leibniz.Assignment;
 import org.teneighty.leibniz.Context;
@@ -38,8 +40,14 @@ import org.teneighty.leibniz.compilation.expression.Expression;
  */
 public final class Subtraction
 	extends AbstractComposedDifferentiable
+	implements Serializable
 {
 	
+	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Subtract the specified argument.
 	 * 

@@ -61,21 +61,7 @@ public interface Differentiable
 	 * @return The partial derivative.
 	 */
 	public Differentiable derivative(Variable... withRespectTo);
-	
-	/**
-	 * Compute the gradient of this differentiable.
-	 * 
-	 * @return The gradient.
-	 */
-	public Gradient gradient();
-	
-	/**
-	 * Compute the Hessian of this differentiable.
-	 * 
-	 * @return The hessian.
-	 */
-	public Hessian hessian();
-	
+		
 	/**
 	 * Get all variables of this differentiable.
 	 * 

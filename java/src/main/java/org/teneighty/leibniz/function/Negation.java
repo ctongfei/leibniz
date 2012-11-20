@@ -40,7 +40,12 @@ import org.teneighty.leibniz.compilation.expression.UnaryOperator;
 public final class Negation
 	extends AbstractComposedDifferentiable
 {
-	
+
+	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Negate the specified argument.
 	 * 
