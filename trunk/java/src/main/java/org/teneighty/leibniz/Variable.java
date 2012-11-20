@@ -40,6 +40,11 @@ public final class Variable
 {
 
 	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
 	 * The name of this variable.
 	 */
 	private final String name;

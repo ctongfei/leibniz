@@ -131,13 +131,18 @@ final class DifferentiableCodeGenerator
 		// write class header.
 		writer.println("package org.teneighty.leibniz.compilation;");
 		writer.println();
+		writer.println("import java.io.Serializable;");
+		writer.println();
 		writer.println("import org.teneighty.leibniz.Assignment;");
 		writer.println("import org.teneighty.leibniz.Differentiable;");
 		writer.println("import org.teneighty.leibniz.Variable;");
 		writer.println();
 		writer.println(String.format("public final class %1$s", simpleName));
 		writer.println("\textends AbstractCompiledDifferentiable");
+		writer.println("\timplements Serializable");
 		writer.println("{");
+		writer.println();
+		writer.println("private static final long serialVersionUID = 1L;");
 		writer.println();
 	}
 	

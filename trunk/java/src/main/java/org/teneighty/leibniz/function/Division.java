@@ -42,6 +42,11 @@ public final class Division
 {
 	
 	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Divide the specified differentiables.
 	 * 
 	 * @param numerator The numerator.

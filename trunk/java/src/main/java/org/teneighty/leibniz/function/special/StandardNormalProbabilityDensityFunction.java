@@ -23,6 +23,8 @@
  */ 
 package org.teneighty.leibniz.function.special;
 
+import java.io.Serializable;
+
 import org.teneighty.leibniz.AbstractComposedDifferentiable;
 import org.teneighty.leibniz.Assignment;
 import org.teneighty.leibniz.Constant;
@@ -38,12 +40,18 @@ import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
  */
 public final class StandardNormalProbabilityDensityFunction
 	extends AbstractComposedDifferentiable
+	implements Serializable
 {
 
 	/**
 	 * A useful constant.
 	 */
 	private static final double SQRT_TWO_PI = Math.sqrt(2d * Math.PI);
+	
+	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Take the standard normal PDF of the specified argument.

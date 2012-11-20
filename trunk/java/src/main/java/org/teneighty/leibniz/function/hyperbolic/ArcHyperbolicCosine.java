@@ -41,6 +41,11 @@ public final class ArcHyperbolicCosine
 {
 
 	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Take the arccosh argument of the specified argument.
 	 * 
 	 * @param argument The argument.

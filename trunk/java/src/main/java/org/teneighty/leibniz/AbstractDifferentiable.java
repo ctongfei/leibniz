@@ -47,17 +47,7 @@ public abstract class AbstractDifferentiable
 	 * Cache of first order derivative by variable.
 	 */
 	private final Map<Variable, Differentiable> derivativeCache;
-	
-	/**
-	 * The gradient function.
-	 */
-	private transient volatile Gradient gradient;
-	
-	/**
-	 * The hessian function.
-	 */
-	private transient volatile Hessian hessian;
-	
+		
 	/**
 	 * Constructor.
 	 */

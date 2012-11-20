@@ -51,14 +51,14 @@ public final class Compiler
 		String source = generator.getSourceCode();
 						
 		// compile the code...
-		CodeCompiler compiler = new CodeCompiler(name, source);
-		Class<?> klass = compiler.getGeneratedClass();
+		CodeCompiler<CompiledDifferentiable> compiler = new CodeCompiler<CompiledDifferentiable>(name, source);
+		Class<CompiledDifferentiable> klass = compiler.getGeneratedClass();
 		
 		try
 		{
 			// and, finally, instantiate!
-			Constructor<?> constructor = klass.getConstructor(Differentiable.class, String.class);			
-			CompiledDifferentiable compiled = (CompiledDifferentiable)constructor.newInstance(differentiable, source);
+			Constructor<CompiledDifferentiable> constructor = klass.getConstructor(Differentiable.class, String.class);			
+			CompiledDifferentiable compiled = constructor.newInstance(differentiable, source);
 			
 			return compiled;			
 		}

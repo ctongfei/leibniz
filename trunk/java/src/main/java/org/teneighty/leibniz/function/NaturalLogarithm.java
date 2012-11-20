@@ -39,7 +39,12 @@ import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
 public final class NaturalLogarithm
 	extends AbstractComposedDifferentiable
 {
-	
+
+	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Take the natural log of the specified argument.
 	 * 

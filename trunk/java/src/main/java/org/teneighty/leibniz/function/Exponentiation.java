@@ -23,6 +23,8 @@
  */ 
 package org.teneighty.leibniz.function;
 
+import java.io.Serializable;
+
 import org.teneighty.leibniz.AbstractComposedDifferentiable;
 import org.teneighty.leibniz.Assignment;
 import org.teneighty.leibniz.Constant;
@@ -35,11 +37,17 @@ import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
 
 
 /**
- * General exponentation
+ * General exponentiation.
  */
 public final class Exponentiation
 	extends AbstractComposedDifferentiable
+	implements Serializable
 {
+
+	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Raise the specified base to the specified power.

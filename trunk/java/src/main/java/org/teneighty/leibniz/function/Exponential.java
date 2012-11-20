@@ -42,6 +42,11 @@ public final class Exponential
 {
 	
 	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Raise the specified differentiable to <i>e</i>.
 	 * 
 	 * @param argument The argument.

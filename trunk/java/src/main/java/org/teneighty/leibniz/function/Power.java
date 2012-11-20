@@ -40,7 +40,12 @@ import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
 public final class Power
 	extends AbstractComposedDifferentiable
 {
-	
+
+	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Raise the specified base to the specified index.
 	 * 

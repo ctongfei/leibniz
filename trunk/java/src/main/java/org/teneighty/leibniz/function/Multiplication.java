@@ -42,6 +42,11 @@ public final class Multiplication
 {
 
 	/**
+	 * Serial version. 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Multiply the specified differentiables.
 	 * 
 	 * @param left Left hand side.
