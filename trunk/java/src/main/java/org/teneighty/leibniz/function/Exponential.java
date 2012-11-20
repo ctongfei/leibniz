@@ -23,6 +23,8 @@
  */ 
 package org.teneighty.leibniz.function;
 
+import java.io.Serializable;
+
 import org.teneighty.leibniz.AbstractComposedDifferentiable;
 import org.teneighty.leibniz.Assignment;
 import org.teneighty.leibniz.Constant;
@@ -39,6 +41,7 @@ import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
  */
 public final class Exponential
 	extends AbstractComposedDifferentiable
+	implements Serializable
 {
 	
 	/**
