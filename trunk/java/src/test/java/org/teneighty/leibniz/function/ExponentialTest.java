@@ -21,34 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz;
+package org.teneighty.leibniz.function;
+
+import org.teneighty.leibniz.Differentiable;
 
 
 /**
- * An assignment of variables to values.
+ * Exponential tests.
  */
-public interface Assignment
+public final class ExponentialTest
+	extends AbstractUnivariateDifferentiableTest
 {
 
 	/**
-	 * Get the value of the specified variable.
-	 * 
-	 * @param variable The variable.
-	 * @return The value.
-	 * @throws IllegalArgumentException If no value has been assigned to <code>variable</code>.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
+	 * @see org.teneighty.leibniz.function.AbstractUnivariateDifferentiableTest#apply(org.teneighty.leibniz.Differentiable)
 	 */
-	public double get(Variable variable)
-		throws IllegalArgumentException, NullPointerException;
+	@Override
+	protected Differentiable apply(Differentiable argument)
+	{
+		return Exponential.exp(argument);
+	}
 	
 	/**
-	 * Check if the specified variable is set.
-	 *  
-	 * @param variable The variable to check.
-	 * @return <code>true</code> if <code>variable</code> is set; <code>false</code> otherwise.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
+	 * @see org.teneighty.leibniz.function.AbstractUnivariateDifferentiableTest#getLowerBound()
 	 */
-	public boolean isSet(Variable variable)
-		throws NullPointerException;
-	
+	@Override
+	protected int getLowerBound()
+	{
+		return -15;
+	}
+
+
 }

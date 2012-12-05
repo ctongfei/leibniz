@@ -26,8 +26,10 @@ package org.teneighty.leibniz;
 
 /**
  * Base interface for compiled objects.
+ * 
+ * @param <TCompiled> The type of compiled object.
  */
-public interface Compiled<TUnderlying>
+public interface Compiled<TCompiled>
 {
 	
 	/**
@@ -35,7 +37,7 @@ public interface Compiled<TUnderlying>
 	 * 
 	 * @return The uncompiled version of this function.
 	 */
-	public TUnderlying uncompiled();
+	public TCompiled uncompiled();
 	
 	/**
 	 * Get the source code for this compiled function.

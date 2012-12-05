@@ -23,32 +23,39 @@
  */ 
 package org.teneighty.leibniz;
 
+import java.util.Random;
+
 
 /**
- * An assignment of variables to values.
+ * Some static functions useful for testing.
  */
-public interface Assignment
+public final class TestUtilities
 {
-
+		
 	/**
-	 * Get the value of the specified variable.
+	 * Assign the specified value to all of the given variables.
 	 * 
-	 * @param variable The variable.
-	 * @return The value.
-	 * @throws IllegalArgumentException If no value has been assigned to <code>variable</code>.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
+	 * @param value The value.
+	 * @param variables The variables.
+	 * @return An assignment of the aforementioned nature.
 	 */
-	public double get(Variable variable)
-		throws IllegalArgumentException, NullPointerException;
+	public static Assignment constant(final double value, final Variable... variables)
+	{
+		MutableAssignment assignment = new MutableAssignment();
+		for(Variable variable : variables)
+		{
+			assignment.set(variable, Double.valueOf(value));
+		}
+		
+		return assignment;
+	}	
 	
 	/**
-	 * Check if the specified variable is set.
-	 *  
-	 * @param variable The variable to check.
-	 * @return <code>true</code> if <code>variable</code> is set; <code>false</code> otherwise.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
+	 * Constructor.
+	 * <p>
+	 * Here only for access protection.
 	 */
-	public boolean isSet(Variable variable)
-		throws NullPointerException;
-	
+	private TestUtilities()
+	{
+	}
 }

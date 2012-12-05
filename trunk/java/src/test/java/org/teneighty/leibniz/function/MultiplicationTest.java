@@ -21,34 +21,62 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz;
+package org.teneighty.leibniz.function;
+
+import junit.framework.Assert;
+
+import org.junit.Test;
+import org.teneighty.leibniz.Assignment;
+import org.teneighty.leibniz.Differentiable;
+import org.teneighty.leibniz.TestUtilities;
+import org.teneighty.leibniz.Variable;
 
 
 /**
- * An assignment of variables to values.
+ * Unit tests for multiplication.
  */
-public interface Assignment
+public final class MultiplicationTest
 {
+	
+	private Variable x = new Variable("x");
 
-	/**
-	 * Get the value of the specified variable.
-	 * 
-	 * @param variable The variable.
-	 * @return The value.
-	 * @throws IllegalArgumentException If no value has been assigned to <code>variable</code>.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
-	 */
-	public double get(Variable variable)
-		throws IllegalArgumentException, NullPointerException;
+	private Variable y = new Variable("y");
 	
-	/**
-	 * Check if the specified variable is set.
-	 *  
-	 * @param variable The variable to check.
-	 * @return <code>true</code> if <code>variable</code> is set; <code>false</code> otherwise.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
-	 */
-	public boolean isSet(Variable variable)
-		throws NullPointerException;
+	private Differentiable x2 = x.times(x);
 	
+	@Test
+	public void value1()
+	{
+		Assignment assignment = TestUtilities.constant(5, x);		
+		Assert.assertEquals(25, x2.value(assignment));
+	}
+	
+	@Test
+	public void derivative1()
+	{
+		Differentiable derivative = x2.derivative(x);
+		Assignment assignment = TestUtilities.constant(5, x);
+
+		Assert.assertEquals(10.0, derivative.value(assignment));
+	}
+
+	@Test
+	public void derivative2()
+	{
+		Differentiable times = x2;
+		Differentiable derivative = times.derivative(x, x);
+		Assignment assignment = TestUtilities.constant(5, x);
+
+		Assert.assertEquals(2.0, derivative.value(assignment));
+		Assert.assertTrue(derivative.isConstant());
+	}
+	
+	@Test
+	public void numerical1()
+	{
+		
+		
+	}
+
+
 }

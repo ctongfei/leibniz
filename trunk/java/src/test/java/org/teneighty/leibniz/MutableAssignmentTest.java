@@ -23,32 +23,71 @@
  */ 
 package org.teneighty.leibniz;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 
 /**
- * An assignment of variables to values.
+ * Unit tests for MutableAssignment.
  */
-public interface Assignment
+public final class MutableAssignmentTest
 {
+	
+	/**
+	 * Variable "x".
+	 */
+	private final Variable x = new Variable("x");
 
 	/**
-	 * Get the value of the specified variable.
-	 * 
-	 * @param variable The variable.
-	 * @return The value.
-	 * @throws IllegalArgumentException If no value has been assigned to <code>variable</code>.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
+	 * Variable "y".
 	 */
-	public double get(Variable variable)
-		throws IllegalArgumentException, NullPointerException;
+	private final Variable y = new Variable("y");
+
+	/**
+	 * Check that an empty assignment throws an exception.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void emptyThrowsException()
+	{
+		MutableAssignment mutable = new MutableAssignment();
+		mutable.get(x);
+	}
+
+	/**
+	 * Check getting an unassigned variable fails.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void unassignedThrowsException()
+	{
+		MutableAssignment mutable = new MutableAssignment();
+		mutable.set(y, 1);
+		mutable.get(x);	
+	}
+
+	/**
+	 * Simple assigned variable test.
+	 */
+	@Test
+	public void assigned()
+	{
+		MutableAssignment mutable = new MutableAssignment();
+		mutable.set(y, 1.0);
+		
+		Assert.assertEquals(1.0, mutable.get(y));
+	}
 	
 	/**
-	 * Check if the specified variable is set.
-	 *  
-	 * @param variable The variable to check.
-	 * @return <code>true</code> if <code>variable</code> is set; <code>false</code> otherwise.
-	 * @throws NullPointerException If <code>variable</cod> is <code>null</code>.
+	 * Simple assigned variable test.
 	 */
-	public boolean isSet(Variable variable)
-		throws NullPointerException;
-	
+	@Test
+	public void assignedTwice()
+	{
+		MutableAssignment mutable = new MutableAssignment();
+		mutable.set(y, 1.0);
+		mutable.set(y, 2.0);
+		
+		Assert.assertEquals(2.0, mutable.get(y));
+	}
+
 }

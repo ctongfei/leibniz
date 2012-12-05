@@ -34,7 +34,7 @@ import javax.tools.ToolProvider;
 /**
  * Compiles code into a Java class.
  * 
- * @param <TCompile> The type we'll compile.
+ * @param <TCompile> The type to compile.
  */
 final class CodeCompiler<TCompile>
 {
@@ -71,7 +71,6 @@ final class CodeCompiler<TCompile>
 	 * @param fullyQualifiedClassName Class name.
 	 * @param sourceCode The source.
 	 */
-	@SuppressWarnings("unchecked")
 	private void generate(final String fullyQualifiedClassName,
 			final String sourceCode)
 	{

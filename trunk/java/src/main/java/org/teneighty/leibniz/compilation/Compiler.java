@@ -32,7 +32,8 @@ import org.teneighty.leibniz.Differentiable;
 /**
  * Compiler framework facade class.
  * <p>
- * This class is stateless and cannot be instantiated.
+ * This class is stateless (and hence safe for use by multiple threads) and
+ * cannot be instantiated.
  */
 public final class Compiler
 {
