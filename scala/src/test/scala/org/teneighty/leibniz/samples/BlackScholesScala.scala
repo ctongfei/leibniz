@@ -23,9 +23,87 @@
  */
 package org.teneighty.leibniz.samples
 
+
+import org.teneighty.leibniz._
+import org.teneighty.leibniz.Differentiable
+import org.teneighty.leibniz.Variable
+import org.teneighty.leibniz.samples.BlackScholes.OptionType
+
+
 /**
  * Black-Scholes example, written in Scala.
  */
 class BlackScholesScala {
+  
+  /**
+   * Underlying price.
+   */
+  private val s : Variable = "s";
+  
+  /**
+   * Strike price.
+   */
+  private val k : Variable = "k";
+  
+  /**
+   * Risk free rate.
+   */
+  private val r : Variable = "r";
+  
+  /**
+   * Time to expiry.
+   */
+  private val t : Variable = "t";
+  
+  /**
+   * Sigma/volatility.
+   */
+  private val sigma : Variable = "sigma";
+    
+  /**
+   * Call price function.
+   */
+  private val call : Differentiable = callPrice();
+  
+  def price(optionType : OptionType, underlying : Double, strike : Double, riskFreeRate : Double, timeToExpiry : Double, volatility : Double)
+  {
+    def assignment : Map[Variable, Double] = assign(underlying, strike, riskFreeRate, timeToExpiry, volatility);
+  }
+  
+  private def assign(underlying : Double, strike : Double, riskFreeRate : Double, timeToExpiry : Double, volatility : Double) : Map[Variable, Double] = 
+  {
+   def assignment : Map[Variable, Double] = Map[Variable, Double](s -> underlying, k -> strike, r -> riskFreeRate, t -> timeToExpiry, sigma -> volatility);
+   return assignment;
+  }
+  
+  /**
+   * Get the call price function.
+   * 
+   * @return Black-Scholes call price function.
+   */
+  private def callPrice() : Differentiable = 
+  {
+    return (s * normCdf(d1)) + (k^(-r*t)*normCdf(d2)); 
+  }
+  
+  /**
+   * Get the <code>d1</code> function for Black-Scholes.
+   * 
+   * @return <code>d1</code>
+   */
+  private def d1() : Differentiable = 
+  {
+    return (ln(s / k) + ((r + (sigma^2)) * t))/(sigma * sqrt(t))
+  }
+  
+  /**
+   * Get the <code>d2</code> function for Black-Scholes.
+   * 
+   * @return <code>d2</code>
+   */
+  private def d2() : Differentiable = 
+  {
+    return d1 - (sigma * sqrt(t));
+  }
 
 }
