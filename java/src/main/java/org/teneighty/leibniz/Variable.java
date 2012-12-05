@@ -115,6 +115,7 @@ public final class Variable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object other)
 	{
 		if(other == null)

@@ -63,7 +63,6 @@ public abstract class AbstractComposedDifferentiable
 		
 		return variables;
 	}
-
 	
 	/**
 	 * @see org.teneighty.leibniz.Differentiable#isConstant()

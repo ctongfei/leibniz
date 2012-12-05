@@ -45,7 +45,8 @@ import org.teneighty.leibniz.function.trigonometric.Tangent;
 /**
  * The doppleganger of {@link java.lang.Math} for differentiables.
  * <p>
- * This class is stateless and cannot be instantiated.
+ * This class is stateless (and hence safe for use by multiple threads) and
+ * cannot be instantiated.
  */
 public final class Differentiables
 {
@@ -81,7 +82,7 @@ public final class Differentiables
 	{
 		return NaturalLogarithm.ln(argument);
 	}
-	
+
 	/**
 	 * Take the base 10 log of the specified argument.
 	 * 
@@ -90,7 +91,7 @@ public final class Differentiables
 	 */
 	public static Differentiable log10(final Differentiable argument)
 	{
-		Constant log10 = new Constant(Math.log(10));		
+		Constant log10 = new Constant(Math.log(10));
 		return ln(argument).over(log10);
 	}
 
@@ -175,29 +176,59 @@ public final class Differentiables
 		return Tangent.tan(argument);
 	}
 
+	/**
+	 * Take the arcsine of the specified argument.
+	 * 
+	 * @param argument The argument.
+	 * @return <code>asin(argument)</code>
+	 */
 	public static Differentiable asin(final Differentiable argument)
 	{
 		return ArcSine.arcsin(argument);
 	}
-	
+
+	/**
+	 * Take the arccosine of the specified argument.
+	 * 
+	 * @param argument The argument.
+	 * @return <code>acos(argument)</code>
+	 */
 	public static Differentiable acos(final Differentiable argument)
 	{
 		return ArcCosine.arccos(argument);
 	}
-	
+
+	/**
+	 * Take the arctangent of the specified argument.
+	 * 
+	 * @param argument The argument.
+	 * @return <code>atan(argument)</code>
+	 */
 	public static Differentiable atan(final Differentiable argument)
 	{
 		return ArcTangent.arctan(argument);
 	}
 
-	public static Differentiable atan2(final Differentiable y, final Differentiable x)
+	/**
+	 * Compute angle in radians between the positive x-axis of a plane and the
+	 * point given by the coordinates <code>(x, y)</code> on it.
+	 * <p>
+	 * The angle is positive for counter-clockwise angles (upper half-plane, y &gt;
+	 * 0), and negative for clockwise angles (lower half-plane, y &lt; 0).
+	 * 
+	 * @param y <code>y</code>
+	 * @param x <code>x</code>
+	 * @return The aformentioned angle.
+	 */
+	public static Differentiable atan2(final Differentiable y,
+			final Differentiable x)
 	{
 		Differentiable argument = (sqrt((y.squared()).plus(x.squared())).minus(x)).over(y);
 		Differentiable atan2 = atan(argument).times(2);
-		
+
 		return atan2;
-	}	
-	
+	}
+
 	/**
 	 * Take the hyperbolic sine of the specified argument.
 	 * 
@@ -230,11 +261,11 @@ public final class Differentiables
 	{
 		return HyperbolicTangent.tanh(argument);
 	}
-	
+
 	/**
 	 * Take the arc hyperbolic sin of the specified argument.
 	 * 
-	 * @param argument The argument. 
+	 * @param argument The argument.
 	 * @return <code>asinh(argument)</code>
 	 */
 	public static Differentiable asinh(final Differentiable argument)
@@ -245,7 +276,7 @@ public final class Differentiables
 	/**
 	 * Take the arc hyperbolic cosine of the specified argument.
 	 * 
-	 * @param argument The argument. 
+	 * @param argument The argument.
 	 * @return <code>acosh(argument)</code>
 	 */
 	public static Differentiable acosh(final Differentiable argument)
@@ -256,7 +287,7 @@ public final class Differentiables
 	/**
 	 * Take the arc hyperbolic tangent of the specified argument.
 	 * 
-	 * @param argument The argument. 
+	 * @param argument The argument.
 	 * @return <code>atanh(argument)</code>
 	 */
 	public static Differentiable atanh(final Differentiable argument)

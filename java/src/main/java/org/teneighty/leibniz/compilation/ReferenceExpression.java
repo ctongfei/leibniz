@@ -53,6 +53,7 @@ final class ReferenceExpression
 	 * Constructor.
 	 * 
 	 * @param variableName The variable name.
+	 * @param referent The referenced expression.
 	 */
 	ReferenceExpression(final String variableName, final Expression referent)
 	{

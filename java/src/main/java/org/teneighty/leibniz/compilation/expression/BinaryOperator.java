@@ -35,7 +35,7 @@ public enum BinaryOperator
 	 */
 	PLUS("+"),
 	
-	/*
+	/**
 	 * Minus.
 	 */
 	MINUS("-"),

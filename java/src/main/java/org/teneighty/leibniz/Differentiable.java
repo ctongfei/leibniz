@@ -29,7 +29,7 @@ import org.teneighty.leibniz.compilation.expression.Expression;
 
 
 /**
- * A differentiable function with a 
+ * A differentiable function.
  * <p>
  * This is the core interface of the Leibniz package.
  */
