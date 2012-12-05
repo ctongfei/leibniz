@@ -27,7 +27,14 @@ import org.teneighty.leibniz.Variable;
 import org.teneighty.leibniz.Constant;
 
 /**
- * Provides some implicit conversion methods.
+ * Leibniz package methods.
+ * <p>
+ * The functionality in this class (broadly) falls into three categories:
+ * <ol>
+ *  <li>Implict cast/conversion methods.</li>
+ *  <li>A type-enriched differentiable with some basic operator overloads.</li>
+ *  <li>Forwarding implementations of the static {@link Differentiables} class</li>
+ * </ol>
  */
 package object leibniz {
 
@@ -71,7 +78,7 @@ package object leibniz {
      *
      * @return <code>-this</code>
      */
-    def -(): Differentiable = differentiable.negate();
+    def unary_-(): Differentiable = differentiable.negate();
 
     /**
      * Add the specified differentiable.
@@ -109,5 +116,49 @@ package object leibniz {
     def ^(that: Differentiable): Differentiable = differentiable.toThe(that);
 
   }
+  
+  def exp(argument : Differentiable) : Differentiable = Differentiables.exp(argument);
+  
+  def ln(argument : Differentiable) : Differentiable = Differentiables.ln(argument);
 
+  def log10(argument : Differentiable) : Differentiable = Differentiables.log10(argument);
+  
+  def pow(base : Differentiable, index : Differentiable) : Differentiable = Differentiables.pow(base, index);
+
+  def sqrt(argument : Differentiable) : Differentiable = Differentiables.sqrt(argument);
+  
+  def cbrt(argument : Differentiable) : Differentiable = Differentiables.cbrt(argument);
+
+  def sin(argument : Differentiable) : Differentiable = Differentiables.sin(argument);
+
+  def cos(argument : Differentiable) : Differentiable = Differentiables.cos(argument);
+
+  def tan(argument : Differentiable) : Differentiable = Differentiables.tan(argument);
+
+  def asin(argument : Differentiable) : Differentiable = Differentiables.asin(argument);
+
+  def acos(argument : Differentiable) : Differentiable = Differentiables.acos(argument);
+
+  def atan(argument : Differentiable) : Differentiable = Differentiables.atan(argument);
+
+  def atan2(y : Differentiable, x : Differentiable) = Differentiables.atan2(y, x);
+  
+  def sinh(argument : Differentiable) = Differentiables.sinh(argument);
+
+  def cosh(argument : Differentiable) = Differentiables.cosh(argument);
+
+  def tanh(argument : Differentiable) = Differentiables.tanh(argument);
+
+  def asinh(argument : Differentiable) = Differentiables.asinh(argument);
+
+  def acosh(argument : Differentiable) = Differentiables.acosh(argument);
+
+  def atanh(argument : Differentiable) = Differentiables.atanh(argument);
+
+  def hypot(y : Differentiable, x : Differentiable) = Differentiables.hypot(y, x);
+  
+  def normCdf(argument : Differentiable) : Differentiable = Differentiables.normCdf(argument);
+
+  def normPdf(argument : Differentiable) : Differentiable = Differentiables.normPdf(argument);
+  
 }
