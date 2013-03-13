@@ -51,4 +51,68 @@ public interface Assignment
 	public boolean isSet(Variable variable)
 		throws NullPointerException;
 	
+	/**
+	 * An assignment builder.
+	 * <p>
+	 * Here is simple example of how to the the builder (setting <code>a</code>
+	 * to 1, <code>b</code> to 2, and <code>c</code> to 3):
+	 * <pre>
+	 * Variable a = new Variable(&quot;a&quot;);
+	 * Variable b = new Variable(&quot;b&quot;);
+	 * Variable c = new Variable(&quot;c&quot;);
+	 * 
+	 * Assignment assignment = Assignment.Build.start().with(a, 1).with(b, 2).with(c, 3).finish();
+	 * </pre>
+	 */
+	public static final class Build
+	{
+		
+		/**
+		 * Start a new assignment build.
+		 * 
+		 * @return A new build.
+		 */
+		public static Build start()
+		{
+			return new Build();
+		}
+		
+		/**
+		 * The underlying assignment.
+		 */
+		private final MutableAssignment assignment;
+		
+		/**
+		 * Constructor.
+		 */
+		private Build()
+		{
+			assignment = new MutableAssignment();
+		}
+		
+		/**
+		 * Assign the value to the specifed variable.
+		 * 
+		 * @param variable The variable.
+		 * @param value The value.
+		 * @return This object.
+		 */
+		public Build with(final Variable variable, final double value)
+		{
+			assignment.set(variable, value);
+			return this;
+		}
+		
+		/**
+		 * Finish building an <code>Assignment</code>.
+		 * 
+		 * @return The <code>Assignment</code>.
+		 */
+		public Assignment finish()
+		{
+			return assignment;
+		}
+		
+	}
+		
 }

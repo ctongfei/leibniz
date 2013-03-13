@@ -61,13 +61,20 @@ public interface Differentiable
 	 * @return The partial derivative.
 	 */
 	public Differentiable derivative(Variable... withRespectTo);
+	
+	/**
+	 * Compute the gradient of this function.
+	 * 
+	 * @return The gradient.
+	 */
+	public Gradient gradient();
 		
 	/**
 	 * Get all variables of this differentiable.
 	 * 
 	 * @return The set of variables.
 	 */
-	public Set<Variable> getVariables();
+	public Set<Variable> variables();
 	
 	// simplification helpers.
 	
@@ -229,7 +236,7 @@ public interface Differentiable
 	 */
 	public CompiledDifferentiable compile();
 	
-	// internal compilation interface.
+	// compilation interface.
 	
 	/**
 	 * Get a Java expression for the value of this differentiable.

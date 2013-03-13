@@ -23,8 +23,6 @@
  */ 
 package org.teneighty.leibniz;
 
-import java.util.Random;
-
 
 /**
  * Some static functions useful for testing.

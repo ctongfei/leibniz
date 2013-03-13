@@ -46,7 +46,7 @@ public final class ExponentialTest
 	 * @see org.teneighty.leibniz.function.AbstractUnivariateDifferentiableTest#getLowerBound()
 	 */
 	@Override
-	protected int getLowerBound()
+	protected double getLowerBound()
 	{
 		return -15;
 	}

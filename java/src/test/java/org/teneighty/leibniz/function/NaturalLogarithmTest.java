@@ -46,7 +46,7 @@ public final class NaturalLogarithmTest
 	 * @see org.teneighty.leibniz.function.AbstractUnivariateDifferentiableTest#getUpperBound()
 	 */
 	@Override
-	protected int getUpperBound()
+	protected double getUpperBound()
 	{
 		return 1000000;
 	}

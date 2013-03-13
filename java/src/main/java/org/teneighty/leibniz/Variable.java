@@ -86,10 +86,10 @@ public final class Variable
 	}
 
 	/**
-	 * @see org.teneighty.leibniz.Differentiable#getVariables()
+	 * @see org.teneighty.leibniz.Differentiable#variables()
 	 */
 	@Override
-	public Set<Variable> getVariables()
+	public Set<Variable> variables()
 	{
 		return Collections.singleton(this);
 	}

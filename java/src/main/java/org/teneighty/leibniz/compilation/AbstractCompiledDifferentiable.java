@@ -23,6 +23,8 @@
  */ 
 package org.teneighty.leibniz.compilation;
 
+import java.util.Set;
+
 import org.teneighty.leibniz.AbstractDifferentiable;
 import org.teneighty.leibniz.CompiledDifferentiable;
 import org.teneighty.leibniz.Context;
@@ -87,7 +89,16 @@ public abstract class AbstractCompiledDifferentiable
 	@Override
 	protected Differentiable derivativeCore(final Variable withRespectTo)
 	{
-		return uncompiledFunction.derivative(withRespectTo);
+		return uncompiled().derivative(withRespectTo);
+	}
+
+	/**
+	 * @see org.teneighty.leibniz.Differentiable#variables()
+	 */
+	@Override
+	public Set<Variable> variables()
+	{
+		return uncompiled().variables();
 	}
 	
 	// simpler to let uncompiled function handle the simplification methods.
@@ -98,7 +109,7 @@ public abstract class AbstractCompiledDifferentiable
 	@Override
 	public boolean isConstant()
 	{
-		return uncompiledFunction.isConstant();
+		return uncompiled().isConstant();
 	}
 
 	/**
@@ -107,7 +118,7 @@ public abstract class AbstractCompiledDifferentiable
 	@Override
 	public boolean isZero()
 	{
-		return uncompiledFunction.isZero();
+		return uncompiled().isZero();
 	}
 	
 	/**
@@ -116,7 +127,7 @@ public abstract class AbstractCompiledDifferentiable
 	@Override
 	public boolean isOne()
 	{
-		return uncompiledFunction.isOne();
+		return uncompiled().isOne();
 	}
 	
 	// and a few hacks for the compilation framework.
@@ -137,7 +148,7 @@ public abstract class AbstractCompiledDifferentiable
 	@Override
 	public Expression expression(final Context codeContext)
 	{
-		return uncompiledFunction.expression(codeContext);
+		return uncompiled().expression(codeContext);
 	}
 
 	/**
@@ -146,7 +157,7 @@ public abstract class AbstractCompiledDifferentiable
 	@Override
 	public int hashCode()
 	{
-		return uncompiledFunction.hashCode();
+		return uncompiled().hashCode();
 	}
 
 	/**

@@ -48,7 +48,7 @@ final class ExpressionGenerator
 	/**
 	 * List of expressions.
 	 */
-	private final List<ReferenceExpression> expressions;
+	private List<ReferenceExpression> expressions;
 	
 	/**
 	 * Variable id generator.
@@ -57,30 +57,27 @@ final class ExpressionGenerator
 	
 	/**
 	 * Constructor.
-	 * 
-	 * @param differentiable The differentiable.
 	 */
-	ExpressionGenerator(final Differentiable differentiable)
+	ExpressionGenerator()
 	{
 		differentiableExpressions = new HashMap<Differentiable, ReferenceExpression>();
-		expressions = new ArrayList<ReferenceExpression>();
+		
 		variableIdGenerator = 0;
-		
-		// fill statement list.
-		getExpression(differentiable);	
-		
 	}
 	
 	/**
-	 * Get the list of expressions.
+	 * Generate expressions for the specified differentiable.
 	 * 
+	 * @param differentiable The differentiable.
 	 * @return The expression list.
 	 */
-	List<ReferenceExpression> getExpressions()
+	List<ReferenceExpression> generate(final Differentiable differentiable)
 	{
+		expressions = new ArrayList<ReferenceExpression>();
+		getExpression(differentiable);
 		return expressions;
 	}
-	
+		
 	/**
 	 * Get the next variable name.
 	 * 
