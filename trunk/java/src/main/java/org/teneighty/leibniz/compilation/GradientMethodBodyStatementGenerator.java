@@ -24,16 +24,20 @@
 package org.teneighty.leibniz.compilation;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.teneighty.leibniz.Variable;
 import org.teneighty.leibniz.compilation.statement.LocalDoubleDeclarationStatement;
-import org.teneighty.leibniz.compilation.statement.ReturnStatement;
+import org.teneighty.leibniz.compilation.statement.SnippetStatement;
 import org.teneighty.leibniz.compilation.statement.Statement;
 
+
 /**
- * Generates code statements given an expression list.
+ * Generates code for gradient method body.
  */
-final class StatementGenerator
+final class GradientMethodBodyStatementGenerator
 {
 
 	/**
@@ -44,12 +48,13 @@ final class StatementGenerator
 	/**
 	 * Constructor.
 	 * 
-	 * @param expressions The expressions.
+	 * @param differentiableExpressions Expressions for the gradient component
+	 *            differentiables.
 	 */
-	StatementGenerator(final List<ReferenceExpression> expressions)
+	GradientMethodBodyStatementGenerator(final LinkedHashMap<Variable, List<ReferenceExpression>> differentiableExpressions)
 	{
 		statements = new ArrayList<Statement>();
-		generateStatements(expressions);
+		generateStatements(differentiableExpressions);
 	}
 
 	/**
@@ -63,34 +68,41 @@ final class StatementGenerator
 	}
 
 	/**
-	 * Generate the list of statements.
 	 * 
-	 * @param expressions The expression list.
+	 * @param differentiableExpressions
 	 */
-	private void generateStatements(final List<ReferenceExpression> expressions)
+	private void generateStatements(final LinkedHashMap<Variable, List<ReferenceExpression>> differentiableExpressions)
 	{
-		for(int index = 0; index < expressions.size(); index++)
+		// hacky.
+		statements.add(new SnippetStatement("MutableGradientValue value = new MutableGradientValue();"));
+		
+		for(Map.Entry<Variable, List<ReferenceExpression>> entry : differentiableExpressions.entrySet())
 		{
-			ReferenceExpression reference = expressions.get(index);
+			Variable variable = entry.getKey();
+			List<ReferenceExpression> expressions = entry.getValue();
+			
+			for(int index = 0; index < expressions.size(); index++)
+			{
+				ReferenceExpression reference = expressions.get(index);
 
-			if(index == (expressions.size() - 1))
-			{
-				// this is the last expression. add the return statement.
-				statements.add(new ReturnStatement(reference));
-			}
-			else
-			{
-				// otherwise, add a local if the expression is referenced more
-				// than once. Expressions with only a single reference will be 
-				// inlined
-				
 				if(reference.getReferenceCount() > 1)
 				{
+					// always add local, even if last expression.
 					LocalDoubleDeclarationStatement lds = new LocalDoubleDeclarationStatement(reference.getVariableName(), reference.referent());
 					statements.add(lds);
 				}
+				
+				if(index == (expressions.size() - 1))
+				{
+					// hack into the result map.
+					String putSnippet = String.format("value.set(new Variable(\"%1$s\"), %2$s);", variable.name(), reference.code());
+					statements.add(new SnippetStatement(putSnippet));
+				}
 			}
 		}
+		
+		// final hack of this class.
+		statements.add(new SnippetStatement("return value;"));
 	}
 
 }
