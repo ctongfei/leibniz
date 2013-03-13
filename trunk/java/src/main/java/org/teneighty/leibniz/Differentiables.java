@@ -333,6 +333,28 @@ public final class Differentiables
 	{
 		return StandardNormalProbabilityDensityFunction.pdf(argument);
 	}
+	
+	/**
+	 * Convert the specified number of degrees to radians.
+	 * 
+	 * @param degrees Value in degrees.
+	 * @return The value in radians.
+	 */
+	public static Differentiable rad(final Differentiable degrees)
+	{
+		return degrees.times(Math.PI).over(180);
+	}
+	
+	/**
+	 * Convert the specified number of radians to degrees.
+	 * 
+	 * @param radians Value in radians.
+	 * @return Value in degrees.
+	 */
+	public static Differentiable deg(final Differentiable radians)
+	{
+		return radians.times(180).over(Math.PI);		
+	}
 
 	/**
 	 * Constructor.

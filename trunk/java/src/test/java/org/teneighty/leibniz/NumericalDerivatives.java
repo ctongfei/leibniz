@@ -45,7 +45,7 @@ public final class NumericalDerivatives
 	/**
 	 * Default sauce for double comparison.
 	 */
-	private static final double DEFAULT_DELTA = 1e-8;
+	private static final double DEFAULT_DELTA = 1e-6;
 
 	/**
 	 * Performs a numerical derivative test.
@@ -100,27 +100,63 @@ public final class NumericalDerivatives
 		return value;
 	}
 		
+	/**
+	 * The differentiable.
+	 */
 	private final Differentiable differentiable;
+	
+	/**
+	 * The variable with respect to which we're differentiating.
+	 */
 	private final Variable withRespectTo;
+	
+	/**
+	 * The base assignment.
+	 */
 	private final Assignment assignment;
+	
+	/**
+	 * Stencil coefficients.
+	 */
 	private final double[] derivativeCoefficients;
 	
+	/**
+	 * The stencil size.
+	 */
 	private final int stencilSize;
+	
+	/**
+	 * The central value of the input grid.
+	 */
 	private final double centralValue;
+	
+	/**
+	 * The grid step size.
+	 */
 	private final double gridSize;
 	
+	/**
+	 * Grid of function inputs.
+	 */
 	private double[] inputGrid;
+	
+	/**
+	 * Grid of function outputs.
+	 */
 	private double[] outputGrid;
 	
 	/**
-	 * @param differentiable
-	 * @param withRespectTo
-	 * @param assignment
-	 * @param derivativeCoefficients
+	 * Constructor.
+	 * 
+	 * @param differentiable The differentiable.
+	 * @param withRespectTo The variable with repsect to which we're taking the derivative.
+	 * @param assignment The base assignment.
+	 * @param derivativeCoefficients Derivative stencil coefficients.
 	 */
-	private NumericalDerivatives(Differentiable differentiable,
-			Variable withRespectTo, Assignment assignment,
-			double[] derivativeCoefficients)
+	private NumericalDerivatives(final Differentiable differentiable,
+			final Variable withRespectTo, 
+			final Assignment assignment,
+			final double[] derivativeCoefficients)
 	{
 		this.differentiable = differentiable;
 		this.withRespectTo = withRespectTo;

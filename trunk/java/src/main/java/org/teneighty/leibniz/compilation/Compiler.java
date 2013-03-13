@@ -26,7 +26,9 @@ package org.teneighty.leibniz.compilation;
 import java.lang.reflect.Constructor;
 
 import org.teneighty.leibniz.CompiledDifferentiable;
+import org.teneighty.leibniz.CompiledGradient;
 import org.teneighty.leibniz.Differentiable;
+import org.teneighty.leibniz.Gradient;
 
 
 /**
@@ -44,7 +46,7 @@ public final class Compiler
 	 * @param differentiable The differentiable.
 	 * @return A compiled version of the specified differentiable.
 	 */
-	public static CompiledDifferentiable compile(final Differentiable differentiable)
+	public static CompiledDifferentiable compileDifferentiable(final Differentiable differentiable)
 	{
 		// generate the code...
 		DifferentiableCodeGenerator generator = new DifferentiableCodeGenerator(differentiable);
@@ -68,7 +70,37 @@ public final class Compiler
 			throw new IllegalArgumentException("Compilation failed", e);
 		}
 	}
-	
+
+	/**
+	 * 
+	 * @param gradient
+	 * @return A compiled gradient.
+	 */
+	public static CompiledGradient compileGradient(final Gradient gradient)
+	{
+		// generate the code...
+		GradientCodeGenerator generator = new GradientCodeGenerator(gradient);
+		String name = generator.getFullyQualifiedClassName();
+		String source = generator.getSourceCode();
+						
+		// compile the code...
+		CodeCompiler<CompiledGradient> compiler = new CodeCompiler<CompiledGradient>(name, source);
+		Class<CompiledGradient> klass = compiler.getGeneratedClass();
+		
+		try
+		{
+			// and, finally, instantiate!
+			Constructor<CompiledGradient> constructor = klass.getConstructor(Gradient.class, String.class);			
+			CompiledGradient compiled = constructor.newInstance(gradient, source);
+			
+			return compiled;			
+		}
+		catch(final Exception e)
+		{
+			throw new IllegalArgumentException("Compilation failed", e);
+		}
+	}
+		
 	/**
 	 * Constructor.
 	 * <p>

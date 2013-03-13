@@ -50,15 +50,15 @@ public abstract class AbstractComposedDifferentiable
 	}
 
 	/**
-	 * @see org.teneighty.leibniz.Differentiable#getVariables()
+	 * @see org.teneighty.leibniz.Differentiable#variables()
 	 */
 	@Override
-	public Set<Variable> getVariables()
+	public Set<Variable> variables()
 	{
 		Set<Variable> variables = new HashSet<Variable>();
 		for(Differentiable argument : arguments)
 		{
-			variables.addAll(argument.getVariables());
+			variables.addAll(argument.variables());
 		}
 		
 		return variables;

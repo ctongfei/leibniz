@@ -87,7 +87,8 @@ public final class BlackScholes
 		System.out.println(delta);
 		System.out.println(gamma);
 		
-		//System.out.println(blackScholes.callValue.derivative(blackScholes.s, blackScholes.s).compile().source());
+		System.out.println(blackScholes.callValue.derivative(blackScholes.s, blackScholes.s).compile().source());
+		
 	}
 
 	/**

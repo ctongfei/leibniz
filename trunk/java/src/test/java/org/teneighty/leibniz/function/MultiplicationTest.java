@@ -28,6 +28,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.teneighty.leibniz.Assignment;
 import org.teneighty.leibniz.Differentiable;
+import org.teneighty.leibniz.NumericalDerivatives;
 import org.teneighty.leibniz.TestUtilities;
 import org.teneighty.leibniz.Variable;
 
@@ -48,7 +49,7 @@ public final class MultiplicationTest
 	public void value1()
 	{
 		Assignment assignment = TestUtilities.constant(5, x);		
-		Assert.assertEquals(25, x2.value(assignment));
+		Assert.assertEquals(25.0, x2.value(assignment));
 	}
 	
 	@Test
@@ -74,9 +75,32 @@ public final class MultiplicationTest
 	@Test
 	public void numerical1()
 	{
-		
-		
+		Assignment assignment = TestUtilities.constant(5, x);
+		NumericalDerivatives.test(x, x, assignment);
 	}
+
+	@Test
+	public void numerical2()
+	{
+		Assignment assignment = TestUtilities.constant(5, x);
+		NumericalDerivatives.test(x2, x, assignment);
+	}
+	
+	@Test
+	public void numerical3()
+	{
+		Assignment assignment = TestUtilities.constant(5, x, y);
+		NumericalDerivatives.test(y, x, assignment);
+	}
+	
+	@Test
+	public void numerical4()
+	{
+		Differentiable xy = x.times(y);
+		Assignment assignment = TestUtilities.constant(5, x, y);
+		NumericalDerivatives.test(xy, x, assignment);
+	}
+
 
 
 }

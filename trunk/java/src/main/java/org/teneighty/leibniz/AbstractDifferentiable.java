@@ -106,6 +106,15 @@ public abstract class AbstractDifferentiable
 	 */
 	protected abstract Differentiable derivativeCore(Variable withRespectTo);
 
+	/**
+	 * @see org.teneighty.leibniz.Differentiable#gradient()
+	 */
+	@Override
+	public Gradient gradient()
+	{
+		return new DefaultGradient(this);
+	}
+	
 	// "operator" implementations.
 	
 	/**
@@ -280,7 +289,7 @@ public abstract class AbstractDifferentiable
 	@Override
 	public CompiledDifferentiable compile()
 	{
-		return Compiler.compile(this);
+		return Compiler.compileDifferentiable(this);
 	}
 	
 	// re-abstraction of equals and hashcode.
