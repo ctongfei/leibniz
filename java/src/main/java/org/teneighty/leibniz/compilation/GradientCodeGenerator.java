@@ -1,0 +1,178 @@
+/*  
+ * $Id$  
+ *   
+ * Copyright (c) 2012-2013 Fran Lattanzio  
+ *   
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to deal  
+ * in the Software without restriction, including without limitation the rights  
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
+ * copies of the Software, and to permit persons to whom the Software is  
+ * furnished to do so, subject to the following conditions:  
+ *   
+ * The above copyright notice and this permission notice shall be included in  
+ * all copies or substantial portions of the Software.  
+ *   
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
+ * SOFTWARE.  
+ */ 
+package org.teneighty.leibniz.compilation;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import org.teneighty.leibniz.Differentiable;
+import org.teneighty.leibniz.Gradient;
+import org.teneighty.leibniz.Variable;
+import org.teneighty.leibniz.compilation.statement.Statement;
+
+
+/**
+ * Gradient code generator.
+ */
+final class GradientCodeGenerator
+	extends AbstractCodeGenerator
+{
+	
+	/**
+	 * The source code.
+	 */
+	private final String code;
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param gradient The gradient.
+	 */
+	GradientCodeGenerator(final Gradient gradient)
+	{
+		code = generateSourceCode(gradient);
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.compilation.CodeGenerator#getSourceCode()
+	 */
+	@Override
+	public String getSourceCode()
+	{
+		System.out.println(code);
+		return code;
+	}
+	
+	/**
+	 * Generate code.
+	 * 
+	 * @param gradient The gradient.
+	 * @return Source code.
+	 */
+	private String generateSourceCode(final Gradient gradient)
+	{	
+		// first, generate code expressions for each component of the 
+		// gradient.
+		ExpressionGenerator expressionGenerator = new ExpressionGenerator();		
+		LinkedHashMap<Variable, List<ReferenceExpression>> componentExpressions = new LinkedHashMap<Variable, List<ReferenceExpression>>();
+		for(Variable variable : gradient.differentiable().variables())
+		{
+			Differentiable component = gradient.component(variable);
+			List<ReferenceExpression> expressions = expressionGenerator.generate(component);
+			componentExpressions.put(variable, expressions);
+		}
+
+		// and convert to statements.
+		GradientMethodBodyStatementGenerator statementGenerator = new GradientMethodBodyStatementGenerator(componentExpressions);
+		List<Statement> statements = statementGenerator.getStatements();
+
+		StringWriter writer = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(writer);
+		
+		// write all the magic.
+		writeClassDefinition(printWriter);
+		writeConstructor(printWriter);
+		writeValueMethod(printWriter, statements);		
+		writeClassTrailer(printWriter);
+				
+		printWriter.flush();
+		writer.flush();
+		return writer.getBuffer().toString();
+	}
+	
+	/**
+	 * Write the class package, import, etc.
+	 * 
+	 * @param writer The write to which to write.
+	 */
+	private void writeClassDefinition(final PrintWriter writer)
+	{
+		// write class header.
+		writer.println("package org.teneighty.leibniz.compilation;");
+		writer.println();
+		writer.println("import java.io.Serializable;");
+		writer.println();
+		writer.println("import org.teneighty.leibniz.Assignment;");
+		writer.println("import org.teneighty.leibniz.Gradient;");
+		writer.println("import org.teneighty.leibniz.GradientValue;");
+		writer.println("import org.teneighty.leibniz.MutableGradientValue;");
+		writer.println("import org.teneighty.leibniz.Variable;");
+		writer.println();
+		writer.println(String.format("public final class %1$s", getSimpleClassName()));
+		writer.println("\textends AbstractCompiledGradient");
+		writer.println("\timplements Serializable");
+		writer.println("{");
+		writer.println();
+		writer.println("private static final long serialVersionUID = 1L;");
+		writer.println();
+	}
+	
+	/**
+	 * Write the constructor.
+	 * 
+	 * @param writer The writer to which to write.
+	 */
+	private void writeConstructor(final PrintWriter writer)
+	{
+		// write constructor.
+		writer.println(String.format("\tpublic %1$s(final Gradient gradient, final String source)", getSimpleClassName()));
+		writer.println("\t{");
+		writer.println("\t\tsuper(gradient, source);");
+		writer.println("\t}");
+		writer.println();
+	}
+	
+	/**
+	 * Write the value method, given the specified code statements.
+	 * 
+	 * @param writer The writer.
+	 * @param statements The method body code statements.
+	 */
+	private void writeValueMethod(final PrintWriter writer, final List<Statement> statements)
+	{
+		writer.println("\tpublic GradientValue value(final Assignment assignment)");
+		writer.println("\t{");
+		
+		for(Statement statement : statements)
+		{
+			writer.println(String.format("\t\t%1$s", statement.code()));
+		}
+		
+		writer.println("\t}");
+		writer.println();
+	}
+	
+	/**
+	 * Write the class trailer.
+	 * 
+	 * @param writer The writer to which to write.
+	 */
+	private void writeClassTrailer(final PrintWriter writer)
+	{
+		writer.println("}");
+	}
+	
+}
