@@ -21,46 +21,71 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz.samples;
+package org.teneighty.leibniz.function;
 
-import static org.teneighty.leibniz.Differentiables.rad;
-import static org.teneighty.leibniz.Differentiables.sin;
+import junit.framework.Assert;
 
+import org.junit.Test;
 import org.teneighty.leibniz.Assignment;
 import org.teneighty.leibniz.Differentiable;
+import org.teneighty.leibniz.Differentiables;
+import org.teneighty.leibniz.NumericalDerivatives;
+import org.teneighty.leibniz.TestUtilities;
 import org.teneighty.leibniz.Variable;
 
 
 /**
- * 
+ * Test for the division operator.
  */
-public class Triangle
+public final class DivisionTest
 {
+	
+	/**
+	 * Variable x.
+	 */
+	private Variable x = new Variable("x");
 
-		
-	public static void main(String[] args)
+	/**
+	 * Variable y.
+	 */
+	private Variable y = new Variable("y");
+	
+	/**
+	 * e(x) / x.
+	 */
+	private Differentiable exOverx = Differentiables.exp(x).dividedBy(x);
+	
+	/**
+	 * Value test.
+	 */
+	@Test
+	public void value1()
 	{
-		Variable a = new Variable("a");
-		Variable b = new Variable("b");
-		Variable beta = new Variable("beta");
-		
-		Differentiable triangleArea = a.times(b).times(sin(rad(beta))).over(2);
-		
-		// a 3-4-5 Pythagorean triangle.
-		Assignment pythag = Assignment.Build.start().with(a, 3).with(b, 4).with(beta, 90).finish();
-		
-		// the area.
-		System.out.println(triangleArea.value(pythag));
-		
-		Differentiable da = triangleArea.derivative(a);
-		System.out.println(da.value(pythag));
-		
-		Differentiable db = triangleArea.derivative(b);
-		System.out.println(db.value(pythag));
-		
-		Differentiable dbeta = triangleArea.derivative(beta);
-		System.out.println(dbeta.value(pythag));
+		Assignment assignment = TestUtilities.constant(5, x);		
+		Assert.assertEquals(Math.exp(5) / 5, exOverx.value(assignment));
 	}
 	
+	/**
+	 * Simple analytical derivative test.
+	 */
+	@Test
+	public void analytical1()
+	{
+		Assignment assignment = TestUtilities.constant(5, x);		
+		Differentiable derivative = exOverx.derivative(x);
+		double value = (Math.exp(5) / 5d) - (Math.exp(5) / 25d);
+		Assert.assertEquals(value, derivative.value(assignment));		
+	}
+	
+	/**
+	 * Test using numerical derivatives.
+	 */
+	@Test
+	public void numerical1()
+	{
+		Assignment assignment = TestUtilities.constant(5, x);
+		NumericalDerivatives.test(exOverx, x, assignment);
+	}
 
 }
+

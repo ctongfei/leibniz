@@ -21,23 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz.compilation;
+package org.teneighty.leibniz.compilation.expression;
 
 
 /**
- * Simple code generator interface.
- * 
- * @param <TUncompiled> The uncompiled type.
+ * A constant integer expression.
  */
-interface CodeGenerator<TUncompiled>
+public class ConstantIntegerExpression
+	extends AbstractExpression
 {
 	
 	/**
-	 * Generate source code for the specified uncompiled object.
-	 * 
-	 * @param uncompiled The uncompiled object.
-	 * @return Source code.
+	 * The integer value of this expression.
 	 */
-	public SourceCodeUnit getSourceCodeUnit(TUncompiled uncompiled);
-	
+	private final int value;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param value The constant value of this expression.
+	 */
+	public ConstantIntegerExpression(final int value)
+	{
+		this.value = value;
+	}
+
+	/**
+	 * @see org.teneighty.leibniz.compilation.expression.Expression#code()
+	 */
+	@Override
+	public String code()
+	{
+		return String.valueOf(value);
+	}
+
 }

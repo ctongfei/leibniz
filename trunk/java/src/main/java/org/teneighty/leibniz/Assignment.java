@@ -40,7 +40,7 @@ public interface Assignment
 	 */
 	public double get(Variable variable)
 		throws IllegalArgumentException, NullPointerException;
-	
+		
 	/**
 	 * Check if the specified variable is set.
 	 *  

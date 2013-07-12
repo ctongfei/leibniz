@@ -27,7 +27,6 @@ import java.io.Serializable;
 
 import org.teneighty.leibniz.AbstractComposedDifferentiable;
 import org.teneighty.leibniz.Assignment;
-import org.teneighty.leibniz.Constant;
 import org.teneighty.leibniz.Context;
 import org.teneighty.leibniz.Differentiable;
 import org.teneighty.leibniz.Variable;
@@ -61,11 +60,6 @@ public final class StandardNormalProbabilityDensityFunction
 	 */
 	public static Differentiable pdf(final Differentiable argument)
 	{
-		if(argument.isZero())
-		{
-			return Constant.ONE;
-		}
-		
 		return new StandardNormalProbabilityDensityFunction(argument);
 	}
 

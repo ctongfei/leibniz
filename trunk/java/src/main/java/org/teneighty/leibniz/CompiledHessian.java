@@ -21,23 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz.compilation;
+package org.teneighty.leibniz;
 
 
 /**
- * Simple code generator interface.
- * 
- * @param <TUncompiled> The uncompiled type.
+ *  Compiled Hessian.
  */
-interface CodeGenerator<TUncompiled>
+public interface CompiledHessian
+	extends Hessian, Compiled<Hessian>
 {
-	
-	/**
-	 * Generate source code for the specified uncompiled object.
-	 * 
-	 * @param uncompiled The uncompiled object.
-	 * @return Source code.
-	 */
-	public SourceCodeUnit getSourceCodeUnit(TUncompiled uncompiled);
 	
 }

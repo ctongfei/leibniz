@@ -29,41 +29,39 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.teneighty.leibniz.Differentiable;
-import org.teneighty.leibniz.Gradient;
-import org.teneighty.leibniz.Variable;
+import org.teneighty.leibniz.Hessian;
+import org.teneighty.leibniz.HessianKey;
 import org.teneighty.leibniz.compilation.statement.Statement;
 
 
 /**
- * Gradient code generator.
+ * Hessian code generator.
  */
-final class GradientCodeGenerator
-	extends AbstractCodeGenerator<Gradient>
+final class HessianCodeGenerator
+	extends AbstractCodeGenerator<Hessian>
 {
 	
 	/**
 	 * @see org.teneighty.leibniz.compilation.CodeGenerator#getSourceCodeUnit(java.lang.Object)
 	 */
 	@Override
-	public SourceCodeUnit getSourceCodeUnit(final Gradient gradient)
+	public SourceCodeUnit getSourceCodeUnit(final Hessian uncompiled)
 	{
 		SourceCodeUnit unit = new SourceCodeUnit();
 		unit.setSimpleClassName(getUniqueClassName());
 		
-		// first, generate code expressions for each component of the 
-		// gradient.
-		ExpressionGenerator expressionGenerator = new ExpressionGenerator();		
-		LinkedHashMap<Variable, List<ReferenceExpression>> componentExpressions = new LinkedHashMap<Variable, List<ReferenceExpression>>();
-		for(Variable variable : gradient.variables())
+		ExpressionGenerator expressionGenerator = new ExpressionGenerator();
+		
+		LinkedHashMap<HessianKey, List<ReferenceExpression>> hessianComponents = new LinkedHashMap<HessianKey, List<ReferenceExpression>>();
+		for(HessianKey key : uncompiled.keys())
 		{
-			Differentiable component = gradient.component(variable);
+			Differentiable component = uncompiled.component(key);
 			List<ReferenceExpression> expressions = expressionGenerator.generate(component);
-			componentExpressions.put(variable, expressions);
+			hessianComponents.put(key, expressions);
 		}
-
-		// and convert to statements.
-		GradientMethodBodyStatementGenerator statementGenerator = new GradientMethodBodyStatementGenerator(componentExpressions);
-		List<Statement> statements = statementGenerator.getStatements();
+				
+		HessianMethodBodyStatementGenerator generator = new HessianMethodBodyStatementGenerator(hessianComponents);		
+		List<Statement> statements = generator.getStatements();
 
 		StringWriter writer = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);
@@ -77,8 +75,9 @@ final class GradientCodeGenerator
 		printWriter.flush();
 		writer.flush();
 		
-		String source = writer.toString();
-		unit.setSourceCode(source);
+		// store the source code, and we're done here.
+		String sourceCode = writer.toString();
+		unit.setSourceCode(sourceCode);
 		
 		return unit;
 	}
@@ -97,13 +96,13 @@ final class GradientCodeGenerator
 		writer.println("import java.io.Serializable;");
 		writer.println();
 		writer.println("import org.teneighty.leibniz.Assignment;");
-		writer.println("import org.teneighty.leibniz.Gradient;");
-		writer.println("import org.teneighty.leibniz.GradientValue;");
-		writer.println("import org.teneighty.leibniz.MutableGradientValue;");
+		writer.println("import org.teneighty.leibniz.Hessian;");
+		writer.println("import org.teneighty.leibniz.HessianValue;");
+		writer.println("import org.teneighty.leibniz.MutableHessianValue;");
 		writer.println("import org.teneighty.leibniz.Variable;");
 		writer.println();
 		writer.println(String.format("public final class %1$s", simpleClassName));
-		writer.println("\textends AbstractCompiledGradient");
+		writer.println("\textends AbstractCompiledHessian");
 		writer.println("\timplements Serializable");
 		writer.println("{");
 		writer.println();
@@ -120,9 +119,9 @@ final class GradientCodeGenerator
 	private void writeConstructor(final PrintWriter writer, final String simpleClassName)
 	{
 		// write constructor.
-		writer.println(String.format("\tpublic %1$s(final Gradient gradient, final String source)", simpleClassName));
+		writer.println(String.format("\tpublic %1$s(final Hessian hessian, final String source)", simpleClassName));
 		writer.println("\t{");
-		writer.println("\t\tsuper(gradient, source);");
+		writer.println("\t\tsuper(hessian, source);");
 		writer.println("\t}");
 		writer.println();
 	}
@@ -135,7 +134,7 @@ final class GradientCodeGenerator
 	 */
 	private void writeValueMethod(final PrintWriter writer, final List<Statement> statements)
 	{
-		writer.println("\tpublic GradientValue value(final Assignment assignment)");
+		writer.println("\tpublic HessianValue value(final Assignment assignment)");
 		writer.println("\t{");
 		
 		for(Statement statement : statements)

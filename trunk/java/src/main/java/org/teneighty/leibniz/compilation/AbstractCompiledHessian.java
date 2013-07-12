@@ -23,89 +23,88 @@
  */ 
 package org.teneighty.leibniz.compilation;
 
-import org.teneighty.leibniz.AbstractGradient;
-import org.teneighty.leibniz.CompiledGradient;
+import org.teneighty.leibniz.AbstractHessian;
+import org.teneighty.leibniz.CompiledHessian;
 import org.teneighty.leibniz.Differentiable;
-import org.teneighty.leibniz.Gradient;
-import org.teneighty.leibniz.Variable;
+import org.teneighty.leibniz.Hessian;
+import org.teneighty.leibniz.HessianKey;
 
 
 /**
- * Base class for compiled gradient implementations.
+ * Base class for compiled Hessians.
  * <p>
  * User code should <b>not</b> extend or otherwise reference this class.
  */
-public abstract class AbstractCompiledGradient
-	extends AbstractGradient
-	implements CompiledGradient
+public abstract class AbstractCompiledHessian
+	extends AbstractHessian
+	implements CompiledHessian
 {
 
 	/**
-	 * The uncompiled gradient.
+	 * Uncompiled Hessian.
 	 */
-	private final Gradient uncompiledGradient;
+	private final Hessian uncompiledHessian;
 	
 	/**
-	 * The source code.
+	 * Source code.
 	 */
-	private final String soureCode;
-	
+	private final String sourceCode;
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param uncompiledGradient Uncompiled function.
-	 * @param soureCode The source code.
+	 * @param uncompiledHessian The uncompiled Hessian.
+	 * @param sourceCode The source code.
 	 */
-	public AbstractCompiledGradient(final Gradient uncompiledGradient,
-			final String soureCode)
+	protected AbstractCompiledHessian(final Hessian uncompiledHessian, final String sourceCode)
 	{
-		this.uncompiledGradient = uncompiledGradient;
-		this.soureCode = soureCode;
+		this.uncompiledHessian = uncompiledHessian;
+		this.sourceCode = sourceCode;
 	}
 
 	/**
-	 * @see org.teneighty.leibniz.Gradient#differentiable()
+	 * @see org.teneighty.leibniz.Hessian#differentiable()
 	 */
 	@Override
 	public Differentiable differentiable()
 	{
-		return uncompiled().differentiable();
+		return uncompiledHessian.differentiable();
 	}
-
+	
 	/**
-	 * @see org.teneighty.leibniz.Gradient#component(org.teneighty.leibniz.Variable)
+	 * @see org.teneighty.leibniz.Hessian#component(org.teneighty.leibniz.HessianKey)
 	 */
 	@Override
-	public Differentiable component(final Variable component)
+	public Differentiable component(final HessianKey key)
 	{
-		return uncompiled().component(component);
+		return uncompiledHessian.component(key);
 	}
-
+	
 	/**
-	 * @see org.teneighty.leibniz.Gradient#compile()
+	 * @see org.teneighty.leibniz.AbstractHessian#compile()
 	 */
 	@Override
-	public CompiledGradient compile()
+	public CompiledHessian compile()
 	{
 		return this;
 	}
-	
+
 	/**
 	 * @see org.teneighty.leibniz.Compiled#uncompiled()
 	 */
 	@Override
-	public Gradient uncompiled()
+	public Hessian uncompiled()
 	{
-		return uncompiledGradient;
+		return uncompiledHessian;
 	}
-	
+
 	/**
 	 * @see org.teneighty.leibniz.Compiled#source()
 	 */
 	@Override
 	public String source()
 	{
-		return soureCode;
+		return sourceCode;
 	}
 	
 	/**
@@ -133,13 +132,13 @@ public abstract class AbstractCompiledGradient
 			return true;
 		}
 		
-		if(other instanceof CompiledGradient)
+		if(other instanceof CompiledHessian)
 		{
-			CompiledGradient that = (CompiledGradient)other;
+			CompiledHessian that = (CompiledHessian)other;
 			return that.uncompiled().equals(uncompiled());
 		}
 		
 		return false;
-	}		
+	}
 
 }

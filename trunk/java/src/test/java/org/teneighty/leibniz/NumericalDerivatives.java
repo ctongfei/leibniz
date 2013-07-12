@@ -187,13 +187,15 @@ public final class NumericalDerivatives
 	 */
 	private void createOutputGrid()
 	{
-		OverridingAssignment override = new OverridingAssignment(assignment);
+		MutableAssignment mutable = new MutableAssignment();
+		CompositeAssignment composite = new CompositeAssignment(mutable, assignment);
+		
 		outputGrid = new double[stencilSize];
 		
 		for(int index = 0; index < stencilSize; index++)
 		{
-			override.override(withRespectTo, inputGrid[index]);
-			outputGrid[index] = differentiable.value(override);
+			mutable.set(withRespectTo, inputGrid[index]);
+			outputGrid[index] = differentiable.value(composite);
 		}		
 	}
 	

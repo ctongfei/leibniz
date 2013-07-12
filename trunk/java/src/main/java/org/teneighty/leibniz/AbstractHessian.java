@@ -23,21 +23,68 @@
  */ 
 package org.teneighty.leibniz;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.teneighty.leibniz.compilation.Compiler;
 
 
 /**
- * Base class from which actual gradient implementations can extend.
+ * Base class for Hessian implementations.
  */
-public abstract class AbstractGradient
-	implements Gradient
+public abstract class AbstractHessian
+	implements Hessian
 {
-		
+
 	/**
-	 * @see org.teneighty.leibniz.Gradient#compile()
+	 * @see org.teneighty.leibniz.Hessian#variables()
 	 */
 	@Override
-	public CompiledGradient compile()
+	public Set<Variable> variables()
+	{
+		return differentiable().variables();
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.Hessian#keys()
+	 */
+	@Override
+	public Set<HessianKey> keys()
+	{
+		Set<Variable> outerSet = new HashSet<Variable>(variables());
+		Set<Variable> innerSet = new HashSet<Variable>(variables());
+		
+		Set<HessianKey> keys = new HashSet<HessianKey>();
+		for(Variable outer : outerSet)
+		{
+			for(Variable inner : innerSet)
+			{				
+				keys.add(new HessianKey(outer, inner));
+			}
+			
+			innerSet.remove(outer);
+		}
+		
+		return keys;
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.Hessian#component(org.teneighty.leibniz.Variable, org.teneighty.leibniz.Variable)
+	 */
+	@Override
+	public Differentiable component(final Variable first, final Variable second)
+	{
+		HessianKey key = new HessianKey(first, second);
+		Differentiable component = component(key);
+		
+		return component;
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.Hessian#compile()
+	 */
+	@Override
+	public CompiledHessian compile()
 	{
 		return Compiler.compile(this);
 	}
@@ -58,9 +105,9 @@ public abstract class AbstractGradient
 			return true;
 		}
 		
-		if(other instanceof Gradient)
+		if(other instanceof Hessian)
 		{
-			Gradient that = (Gradient)other;
+			Hessian that = (Hessian)other;
 			return differentiable().equals(that.differentiable());
 		}
 		
@@ -75,5 +122,5 @@ public abstract class AbstractGradient
 	{
 		return differentiable().hashCode();
 	}
-	
+
 }

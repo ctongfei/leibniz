@@ -31,7 +31,7 @@ import org.teneighty.leibniz.Constant;
 import org.teneighty.leibniz.Context;
 import org.teneighty.leibniz.Differentiable;
 import org.teneighty.leibniz.Variable;
-import org.teneighty.leibniz.compilation.expression.ConstantExpression;
+import org.teneighty.leibniz.compilation.expression.ConstantDoubleExpression;
 import org.teneighty.leibniz.compilation.expression.Expression;
 import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
 
@@ -109,7 +109,7 @@ public final class Power
 	protected Differentiable derivativeCore(final Variable withRespectTo)
 	{
 		Differentiable baseDerivative = base.derivative(withRespectTo);
-		Differentiable derivative = baseDerivative.times(base.power(index - 1d));
+		Differentiable derivative = baseDerivative.times(base.power(index - 1d)).times(index);
 		
 		return derivative;
 	}
@@ -121,7 +121,7 @@ public final class Power
 	public Expression expression(final Context codeContext)
 	{
 		Expression baseExpression = codeContext.getExpression(base);
-		Expression indexExpression = new ConstantExpression(index);
+		Expression indexExpression = new ConstantDoubleExpression(index);
 		Expression expression = new StaticMethodCallExpression(Math.class, "pow", baseExpression, indexExpression);
 		
 		return expression;

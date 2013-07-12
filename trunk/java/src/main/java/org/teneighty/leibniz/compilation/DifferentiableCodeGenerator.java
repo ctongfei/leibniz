@@ -35,43 +35,23 @@ import org.teneighty.leibniz.compilation.statement.Statement;
  * Differentiable code generator.
  */
 final class DifferentiableCodeGenerator
-	extends AbstractCodeGenerator
+	extends AbstractCodeGenerator<Differentiable>
 {
-
-
-	/**
-	 * The source code.
-	 */
-	private final String sourceCode;
 	
 	/**
-	 * @param differentiable
-	 */
-	DifferentiableCodeGenerator(final Differentiable differentiable)
-	{
-		this.sourceCode = generateSourceCode(differentiable);
-	}
-
-	/**
-	 * @see org.teneighty.leibniz.compilation.CodeGenerator#getSourceCode()
+	 * @see org.teneighty.leibniz.compilation.CodeGenerator#getSourceCodeUnit(java.lang.Object)
 	 */
 	@Override
-	public String getSourceCode()
+	public SourceCodeUnit getSourceCodeUnit(final Differentiable uncompiled)
 	{
-		return sourceCode;
-	}
-	
-	/**
-	 * Generate source code the specified differentiable.s
-	 *  
-	 * @param differentiable The differentiable.
-	 * @return The source code.
-	 */
-	private String generateSourceCode(final Differentiable differentiable)
-	{	
+		// make class names.
+		String simpleClassName = getUniqueClassName();
+		SourceCodeUnit unit = new SourceCodeUnit();
+		unit.setSimpleClassName(simpleClassName);
+		
 		// get all code expressions for our differentiable.
 		ExpressionGenerator expressionGenerator = new ExpressionGenerator();
-		List<ReferenceExpression> expressions = expressionGenerator.generate(differentiable);
+		List<ReferenceExpression> expressions = expressionGenerator.generate(uncompiled);
 		
 		// and convert to statements.
 		DifferentiableMethodBodyStatementGenerator statementGenerator = new DifferentiableMethodBodyStatementGenerator(expressions);
@@ -81,22 +61,27 @@ final class DifferentiableCodeGenerator
 		PrintWriter printWriter = new PrintWriter(writer);
 		
 		// write all the magic.
-		writeClassDefinition(printWriter);
-		writeConstructor(printWriter);
+		writeClassDefinition(printWriter, simpleClassName);
+		writeConstructor(printWriter, simpleClassName);
 		writeValueMethod(printWriter, statements);		
 		writeClassTrailer(printWriter);
 				
 		printWriter.flush();
 		writer.flush();
-		return writer.getBuffer().toString();
+		
+		String source = writer.toString();
+		unit.setSourceCode(source);
+		
+		return unit;
 	}
 	
 	/**
 	 * Write the class package, import, etc.
 	 * 
+	 * @param simpleClassName The class name.
 	 * @param writer The write to which to write.
 	 */
-	private void writeClassDefinition(final PrintWriter writer)
+	private void writeClassDefinition(final PrintWriter writer, final String simpleClassName)
 	{
 		// write class header.
 		writer.println("package org.teneighty.leibniz.compilation;");
@@ -107,7 +92,7 @@ final class DifferentiableCodeGenerator
 		writer.println("import org.teneighty.leibniz.Differentiable;");
 		writer.println("import org.teneighty.leibniz.Variable;");
 		writer.println();
-		writer.println(String.format("public final class %1$s", getSimpleClassName()));
+		writer.println(String.format("public final class %1$s", simpleClassName));
 		writer.println("\textends AbstractCompiledDifferentiable");
 		writer.println("\timplements Serializable");
 		writer.println("{");
@@ -119,12 +104,13 @@ final class DifferentiableCodeGenerator
 	/**
 	 * Write the constructor.
 	 * 
+	 * @param simpleClassName The simple class name.
 	 * @param writer The writer to which to write.
 	 */
-	private void writeConstructor(final PrintWriter writer)
+	private void writeConstructor(final PrintWriter writer, final String simpleClassName)
 	{
 		// write constructor.
-		writer.println(String.format("\tpublic %1$s(final Differentiable differentiable, final String source)", getSimpleClassName()));
+		writer.println(String.format("\tpublic %1$s(final Differentiable differentiable, final String source)", simpleClassName));
 		writer.println("\t{");
 		writer.println("\t\tsuper(differentiable, source);");
 		writer.println("\t}");

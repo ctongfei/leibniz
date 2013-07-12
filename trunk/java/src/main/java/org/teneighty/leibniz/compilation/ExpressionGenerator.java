@@ -24,6 +24,7 @@
 package org.teneighty.leibniz.compilation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +62,9 @@ final class ExpressionGenerator
 	ExpressionGenerator()
 	{
 		differentiableExpressions = new HashMap<Differentiable, ReferenceExpression>();
-		
 		variableIdGenerator = 0;
 	}
-	
+		
 	/**
 	 * Generate expressions for the specified differentiable.
 	 * 
@@ -74,7 +74,16 @@ final class ExpressionGenerator
 	List<ReferenceExpression> generate(final Differentiable differentiable)
 	{
 		expressions = new ArrayList<ReferenceExpression>();
-		getExpression(differentiable);
+		
+		// we already have the necessary expression for this differentiable.
+		ReferenceExpression expression = differentiableExpressions.get(differentiable);
+		if(expression != null)
+		{
+			return Collections.singletonList(expression);
+		}
+		
+		// otherwise generate all necessary expressions.
+		getExpression(differentiable);		
 		return expressions;
 	}
 		
@@ -93,7 +102,7 @@ final class ExpressionGenerator
 	 * @see org.teneighty.leibniz.Context#getExpression(org.teneighty.leibniz.Differentiable)
 	 */
 	@Override
-	public Expression getExpression(final Differentiable differentiable)
+	public ReferenceExpression getExpression(final Differentiable differentiable)
 	{
 		ReferenceExpression reference = differentiableExpressions.get(differentiable);
 		if(reference != null)

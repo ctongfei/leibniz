@@ -27,8 +27,10 @@ import java.lang.reflect.Constructor;
 
 import org.teneighty.leibniz.CompiledDifferentiable;
 import org.teneighty.leibniz.CompiledGradient;
+import org.teneighty.leibniz.CompiledHessian;
 import org.teneighty.leibniz.Differentiable;
 import org.teneighty.leibniz.Gradient;
+import org.teneighty.leibniz.Hessian;
 
 
 /**
@@ -43,60 +45,79 @@ public final class Compiler
 	/**
 	 * Compile the specified differentiable.
 	 * 
-	 * @param differentiable The differentiable.
-	 * @return A compiled version of the specified differentiable.
+	 * @param differentiable The differentiable to compile.
+	 * @return A compiled differentiable.
 	 */
-	public static CompiledDifferentiable compileDifferentiable(final Differentiable differentiable)
+	public static CompiledDifferentiable compile(final Differentiable differentiable)
 	{
-		// generate the code...
-		DifferentiableCodeGenerator generator = new DifferentiableCodeGenerator(differentiable);
-		String name = generator.getFullyQualifiedClassName();
-		String source = generator.getSourceCode();
-						
-		// compile the code...
-		CodeCompiler<CompiledDifferentiable> compiler = new CodeCompiler<CompiledDifferentiable>(name, source);
-		Class<CompiledDifferentiable> klass = compiler.getGeneratedClass();
+		DifferentiableCodeGenerator codeGenerator = new DifferentiableCodeGenerator();
+		CompiledDifferentiable compiled = compile(Differentiable.class, differentiable, codeGenerator);
 		
-		try
-		{
-			// and, finally, instantiate!
-			Constructor<CompiledDifferentiable> constructor = klass.getConstructor(Differentiable.class, String.class);			
-			CompiledDifferentiable compiled = constructor.newInstance(differentiable, source);
-			
-			return compiled;			
-		}
-		catch(final Exception e)
-		{
-			throw new IllegalArgumentException("Compilation failed", e);
-		}
+		return compiled;
+	}
+	
+	/**
+	 * Compile the specified gradient.
+	 * 
+	 * @param gradient The gradient to compile.
+	 * @return A compiled gradient.
+	 */
+	public static CompiledGradient compile(final Gradient gradient)
+	{
+		GradientCodeGenerator codeGenerator = new GradientCodeGenerator();
+		CompiledGradient compiled = compile(Gradient.class, gradient, codeGenerator);
+		
+		return compiled;
 	}
 
 	/**
+	 * Compile the specified Hessian.
 	 * 
-	 * @param gradient
-	 * @return A compiled gradient.
+	 * @param hessian The hessian to compile.
+	 * @return A compiled Hessian.
 	 */
-	public static CompiledGradient compileGradient(final Gradient gradient)
+	public static CompiledHessian compile(final Hessian hessian)
 	{
-		// generate the code...
-		GradientCodeGenerator generator = new GradientCodeGenerator(gradient);
-		String name = generator.getFullyQualifiedClassName();
-		String source = generator.getSourceCode();
-						
-		// compile the code...
-		CodeCompiler<CompiledGradient> compiler = new CodeCompiler<CompiledGradient>(name, source);
-		Class<CompiledGradient> klass = compiler.getGeneratedClass();
+		HessianCodeGenerator codeGenerator = new HessianCodeGenerator();
+		CompiledHessian compiled = compile(Hessian.class, hessian, codeGenerator);
+		
+		return compiled;
+	}
+	
+	/**
+	 * Core compile method.
+	 * 
+	 * @param <TUncompiled> The uncompiled type.
+	 * @param <TCompiled> The compiled type.
+	 * @param uncompiledType The class of the uncompiled object.
+	 * @param uncompiled The uncompiled object.
+	 * @param generator A code generator.
+	 * @return A compiled version of <code>uncompiled</code>.
+	 */
+	private static <TUncompiled, TCompiled> TCompiled compile(
+			final Class<TUncompiled> uncompiledType, 
+			final TUncompiled uncompiled, 
+			final CodeGenerator<TUncompiled> generator)
+	{
+		// generate the source.
+		SourceCodeUnit sourceCode = generator.getSourceCodeUnit(uncompiled);
+		String source = sourceCode.getSourceCode();
+		
+		// compile the code.
+		CodeCompiler<TCompiled> compiler = new CodeCompiler<TCompiled>();
+		Class<TCompiled> compiledClass = compiler.compile(sourceCode);
 		
 		try
 		{
 			// and, finally, instantiate!
-			Constructor<CompiledGradient> constructor = klass.getConstructor(Gradient.class, String.class);			
-			CompiledGradient compiled = constructor.newInstance(gradient, source);
+			Constructor<TCompiled> constructor = compiledClass.getConstructor(uncompiledType, String.class);			
+			TCompiled compiled = constructor.newInstance(uncompiled, source);
 			
 			return compiled;			
 		}
 		catch(final Exception e)
 		{
+			// whatever... checked exceptions can be annoying.
 			throw new IllegalArgumentException("Compilation failed", e);
 		}
 	}

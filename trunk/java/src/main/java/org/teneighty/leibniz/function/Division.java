@@ -118,7 +118,7 @@ public final class Division
 		Differentiable numeratorDerivative = numerator.derivative(withRespectTo);
 		Differentiable denominatorDerivative = denominator.derivative(withRespectTo);
 		
-		Differentiable derivativeNumerator = (numeratorDerivative.times(denominator)).minus(denominator.times(denominatorDerivative));
+		Differentiable derivativeNumerator = (numeratorDerivative.times(denominator)).minus(numerator.times(denominatorDerivative));
 		Differentiable derivativeDenominator = denominator.squared();		
 		Differentiable derivative = derivativeNumerator.dividedBy(derivativeDenominator);
 		

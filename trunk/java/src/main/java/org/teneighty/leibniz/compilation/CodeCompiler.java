@@ -31,6 +31,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+
 /**
  * Compiles code into a Java class.
  * 
@@ -40,40 +41,17 @@ final class CodeCompiler<TCompile>
 {
 
 	/**
-	 * The class we generated.
-	 */
-	private Class<TCompile> generatedClass;
-
-	/**
-	 * Constructor.
+	 * Compule the specified source code.
 	 * 
-	 * @param fullyQualifiedClassName The fully-qualified class name. 
-	 * @param source The Java source code, as a string.
+	 * @param sourceCodeUnit The source unit.
+	 * @return The compiled type.
 	 */
-	CodeCompiler(final String fullyQualifiedClassName, final String source)
+	Class<TCompile> compile(final SourceCodeUnit sourceCodeUnit)
 	{
-		generate(fullyQualifiedClassName, source);
-	}
-
-	/**
-	 * Get the generated class.
-	 * 
-	 * @return The generated class.
-	 */
-	Class<TCompile> getGeneratedClass()
-	{
-		return generatedClass;
-	}
-
-	/**
-	 * Generate the class file.
-	 * 
-	 * @param fullyQualifiedClassName Class name.
-	 * @param sourceCode The source.
-	 */
-	private void generate(final String fullyQualifiedClassName,
-			final String sourceCode)
-	{
+		// extract the magic.
+		String fullyQualifiedClassName = sourceCodeUnit.getFullyQualifiedClassName();
+		String sourceCode = sourceCodeUnit.getSourceCode();
+		
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
 		// create string-based "files".
@@ -90,7 +68,8 @@ final class CodeCompiler<TCompile>
 		try
 		{
 			// extract the generated class.
-			generatedClass = (Class<TCompile>)streamManager.getClassLoader(null).loadClass(fullyQualifiedClassName);
+			Class<TCompile> generatedClass = (Class<TCompile>)streamManager.getClassLoader(null).loadClass(fullyQualifiedClassName);
+			return generatedClass;
 		}
 		catch(final ClassNotFoundException cnfe)
 		{

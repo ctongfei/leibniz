@@ -28,9 +28,11 @@ import java.util.UUID;
 
 /**
  * Base class for code generators.
+ * 
+ * @param <TUncompiled> The uncompiled type.
  */
-abstract class AbstractCodeGenerator
-	implements CodeGenerator
+abstract class AbstractCodeGenerator<TUncompiled>
+	implements CodeGenerator<TUncompiled>
 {
 	
 	/**
@@ -38,45 +40,10 @@ abstract class AbstractCodeGenerator
 	 * 
 	 * @return A unique class name.
 	 */
-	private static String getUniqueClassName()
+	protected static String getUniqueClassName()
 	{
 		UUID id = UUID.randomUUID();
 		return String.format("Compiled_%1$s", id.toString().replace('-', '_'));
 	}
-			
-	/**
-	 * Generated class name.
-	 */
-	private final String simpleName;
-		
-	/**
-	 * Constructor.
-	 */
-	protected AbstractCodeGenerator()
-	{
-		simpleName = getUniqueClassName();		
-	}
-	
-	/**
-	 * Get the simple class name.
-	 * 
-	 * @return The simple class name.
-	 */
-	@Override
-	public String getSimpleClassName()
-	{
-		return simpleName;
-	}
-	
-	/**
-	 * Get the fully qualified class name.
-	 * 
-	 * @return The fully qualified class name.
-	 */
-	@Override
-	public String getFullyQualifiedClassName()
-	{
-		return String.format("org.teneighty.leibniz.compilation.%1$s", simpleName);
-	}
-	
+				
 }

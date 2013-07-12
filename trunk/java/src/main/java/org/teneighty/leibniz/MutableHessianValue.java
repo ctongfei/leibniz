@@ -23,79 +23,81 @@
  */ 
 package org.teneighty.leibniz;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
- * Layering assignment.
+ * Simple, mutable result of evaluating a Hessian.
  */
-public class OverridingAssignment
-	implements Assignment
+public class MutableHessianValue
+	extends AbstractHessianValue
 {
-	
-	/**
-	 * Base assignment.
-	 */
-	private final Assignment baseAssignment;
-	
-	/**
-	 * Overrides.
-	 */
-	private final MutableAssignment overrides;
 
+	/**
+	 * The values.
+	 */
+	private final Map<HessianKey, Double> values;
+	
 	/**
 	 * Constructor.
-	 * 
-	 * @param baseAssignment The base assignment.
 	 */
-	public OverridingAssignment(final Assignment baseAssignment)
+	public MutableHessianValue()
 	{
-		this.baseAssignment = baseAssignment;
-		overrides = new MutableAssignment();
+		values = new HashMap<HessianKey, Double>();
 	}
-
+	
 	/**
-	 * @see org.teneighty.leibniz.Assignment#get(org.teneighty.leibniz.Variable)
+	 * @see org.teneighty.leibniz.HessianValue#value(org.teneighty.leibniz.HessianKey)
 	 */
 	@Override
-	public double get(final Variable variable)
-		throws IllegalArgumentException
-	{		
-		if(overrides.isSet(variable))
+	public double value(final HessianKey key)
+	{
+		Double value = values.get(key);
+		if(value == null)
 		{
-			return overrides.get(variable);
+			String message = String.format("No value for %1$s", key);
+			throw new IllegalArgumentException(message);
 		}
 		
-		return baseAssignment.get(variable);
+		return value.doubleValue();
 	}
-	
+		
 	/**
-	 * @see org.teneighty.leibniz.Assignment#isSet(org.teneighty.leibniz.Variable)
-	 */
-	@Override
-	public boolean isSet(Variable variable)
-		throws NullPointerException
-	{
-		return overrides.isSet(variable) || baseAssignment.isSet(variable);
-	}
-
-	/**
-	 * Override the specified variable.
+	 * Set the value for the specified variables.
 	 * 
-	 * @param variable The variable.
+	 * @param first The first variable.
+	 * @param second The second variable.
 	 * @param value The value.
 	 */
-	public void override(final Variable variable, final double value)
+	public void set(final Variable first, final Variable second, final double value)
 	{
-		overrides.set(variable, value);
+		HessianKey key = new HessianKey(first, second);
+		set(key, value);
 	}
-	
+		
 	/**
-	 * Clear the specified override.
+	 * Set the value for the specified key.
 	 * 
-	 * @param variable The variable to clear.
+	 * @param key The key.
+	 * @param value The value.
 	 */
-	public void clear(final Variable variable)
+	public void set(final HessianKey key, final double value)
 	{
-		overrides.clear(variable);
+		values.put(key, value);		
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("MutableHessianValue [values=");
+		builder.append(values);
+		builder.append("]");
+		return builder.toString();
+	}
+	
 }

@@ -25,6 +25,7 @@ package org.teneighty.leibniz;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -33,32 +34,41 @@ import java.util.Map;
 public class DefaultGradient
 	extends AbstractGradient
 {
-
-	/**
-	 * The parent differentiable.
-	 */
-	private final Differentiable differentiable;
 	
 	/**
-	 * The gradient components.
+	 * The differentiable.
 	 */
-	private final Map<Variable, Differentiable> gradientComponents;
+	private final Differentiable differentiable;
+
+	/**
+	 * The variables.
+	 */
+	private final Set<Variable> variables;
+	
+	/**
+	 * Components keyed by variable.
+	 */
+	private final Map<Variable, Differentiable> components;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param differentiable The differentiable.
+	 * @param variables The variables. 
 	 */
-	public DefaultGradient(final Differentiable differentiable)
+	public DefaultGradient(final Differentiable differentiable,
+			final Set<Variable> variables)
 	{
-		this.differentiable = differentiable;				
+		this.differentiable = differentiable;
+		this.variables = variables;
 		
-		// store gradient components.
-		gradientComponents = new HashMap<Variable, Differentiable>();
-		for(Variable component : differentiable.variables())
+		components = new HashMap<Variable, Differentiable>();
+		for(Variable variable : variables)
 		{
-			gradientComponents.put(component, differentiable.derivative(component));
+			Differentiable derivative = differentiable.derivative(variable);
+			components.put(variable, derivative);
 		}
+		
 	}
 
 	/**
@@ -68,28 +78,14 @@ public class DefaultGradient
 	public GradientValue value(final Assignment assignment)
 	{
 		MutableGradientValue value = new MutableGradientValue();
-		for(Map.Entry<Variable, Differentiable> entry : gradientComponents.entrySet())
+		for(Variable variable : variables)
 		{
-			value.set(entry.getKey(), entry.getValue().value(assignment));
+			Differentiable component = component(variable);
+			double componentValue = component.value(assignment);
+			value.set(variable, componentValue);
 		}
 		
 		return value;
-	}
-
-	/**
-	 * @see org.teneighty.leibniz.Gradient#component(org.teneighty.leibniz.Variable)
-	 */
-	@Override
-	public Differentiable component(final Variable component)
-	{
-		Differentiable differentiable = gradientComponents.get(component);
-		
-		if(differentiable == null)
-		{
-			throw new IllegalArgumentException("component");
-		}
-		
-		return differentiable;
 	}
 
 	/**
@@ -100,5 +96,25 @@ public class DefaultGradient
 	{
 		return differentiable;
 	}
+
+	/**
+	 * @see org.teneighty.leibniz.Gradient#variables()
+	 */
+	@Override
+	public Set<Variable> variables()
+	{
+		return variables;
+	}
 	
+	/**
+	 * @see org.teneighty.leibniz.Gradient#component(org.teneighty.leibniz.Variable)
+	 */
+	@Override
+	public Differentiable component(Variable variable)
+	{
+		Differentiable component = components.get(variable);
+		
+		return component;
+	}
+
 }

@@ -21,23 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz.compilation;
+package org.teneighty.leibniz.function.special;
+
+import org.junit.Test;
+import org.teneighty.leibniz.Assignment;
+import org.teneighty.leibniz.Differentiable;
+import org.teneighty.leibniz.NumericalDerivatives;
+import org.teneighty.leibniz.Variable;
 
 
 /**
- * Simple code generator interface.
  * 
- * @param <TUncompiled> The uncompiled type.
  */
-interface CodeGenerator<TUncompiled>
+public class StandardNormalProbabilityDensityFunctionTest
 {
 	
-	/**
-	 * Generate source code for the specified uncompiled object.
-	 * 
-	 * @param uncompiled The uncompiled object.
-	 * @return Source code.
-	 */
-	public SourceCodeUnit getSourceCodeUnit(TUncompiled uncompiled);
+	private Variable x = new Variable("x");
 	
+	/**
+	 * Simple numerical derivative test.
+	 */
+	@Test
+	public void numerical1()
+	{
+		Differentiable arg = x.plus(x);
+		Assignment assignment = Assignment.Build.start().with(x, 5).finish();		
+		NumericalDerivatives.test(arg, x, assignment);
+	}
+
 }

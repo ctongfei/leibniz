@@ -28,7 +28,7 @@ package org.teneighty.leibniz;
  */
 public interface GradientValue
 {
-	
+
 	/**
 	 * Get the value for the specified component.
 	 * 
