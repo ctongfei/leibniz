@@ -25,6 +25,7 @@ package org.teneighty.leibniz;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.teneighty.leibniz.compilation.Compiler;
 import org.teneighty.leibniz.function.Addition;
@@ -105,14 +106,32 @@ public abstract class AbstractDifferentiable
 	 * @return Partial with respect to the specified variable.
 	 */
 	protected abstract Differentiable derivativeCore(Variable withRespectTo);
-
+		
 	/**
 	 * @see org.teneighty.leibniz.Differentiable#gradient()
 	 */
 	@Override
 	public Gradient gradient()
 	{
-		return new DefaultGradient(this);
+		return new DefaultGradient(this, variables());
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.Differentiable#gradient()
+	 */
+	@Override
+	public Gradient gradient(final Set<Variable> variables)
+	{
+		return new DefaultGradient(this, variables);
+	}
+		
+	/**
+	 * @see org.teneighty.leibniz.Differentiable#hessian()
+	 */
+	@Override
+	public Hessian hessian()
+	{
+		return new DefaultHessian(this);
 	}
 	
 	// "operator" implementations.
@@ -222,7 +241,16 @@ public abstract class AbstractDifferentiable
 	@Override
 	public Differentiable squared()
 	{
-		return this.times(this);
+		return Power.power(this, 2);
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.Differentiable#cubed()
+	 */
+	@Override
+	public Differentiable cubed()
+	{
+		return Power.power(this, 3);
 	}
 	
 	/**
@@ -289,7 +317,7 @@ public abstract class AbstractDifferentiable
 	@Override
 	public CompiledDifferentiable compile()
 	{
-		return Compiler.compileDifferentiable(this);
+		return Compiler.compile(this);
 	}
 	
 	// re-abstraction of equals and hashcode.

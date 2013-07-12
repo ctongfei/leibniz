@@ -26,6 +26,7 @@ package org.teneighty.leibniz;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Mutable gradient value implementation.
  */
@@ -76,5 +77,18 @@ public class MutableGradientValue
 		
 		values.put(component, value);
 	}
-	
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("MutableGradientValue [values=");
+		builder.append(values);
+		builder.append("]");
+		return builder.toString();
+	}
+		
 }

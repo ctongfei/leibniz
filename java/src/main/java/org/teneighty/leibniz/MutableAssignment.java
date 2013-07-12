@@ -26,10 +26,9 @@ package org.teneighty.leibniz;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Simple, mutable assignment.
- * <p>
- * Instances of this class are <b>not</b> safe for use by multiple threads.
  */
 public final class MutableAssignment
 	implements Assignment
@@ -64,7 +63,7 @@ public final class MutableAssignment
 		Double value = values.get(variable);
 		return value.doubleValue();
 	}
-	
+		
 	/**
 	 * @see org.teneighty.leibniz.Assignment#isSet(org.teneighty.leibniz.Variable)
 	 */

@@ -64,24 +64,6 @@ public abstract class AbstractCompiledDifferentiable
 		this.uncompiledFunction = differentiable;
 		this.soureCode = sourceCode;
 	}
-
-	/**
-	 * @see org.teneighty.leibniz.CompiledDifferentiable#uncompiled()
-	 */
-	@Override
-	public Differentiable uncompiled()
-	{
-		return uncompiledFunction;
-	}
-	
-	/**
-	 * @see org.teneighty.leibniz.CompiledDifferentiable#source()
-	 */
-	@Override
-	public String source()
-	{
-		return soureCode;
-	}
 	
 	/**
 	 * @see org.teneighty.leibniz.AbstractDifferentiable#derivativeCore(org.teneighty.leibniz.Variable)
@@ -149,6 +131,24 @@ public abstract class AbstractCompiledDifferentiable
 	public Expression expression(final Context codeContext)
 	{
 		return uncompiled().expression(codeContext);
+	}
+
+	/**
+	 * @see org.teneighty.leibniz.CompiledDifferentiable#uncompiled()
+	 */
+	@Override
+	public Differentiable uncompiled()
+	{
+		return uncompiledFunction;
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.CompiledDifferentiable#source()
+	 */
+	@Override
+	public String source()
+	{
+		return soureCode;
 	}
 
 	/**

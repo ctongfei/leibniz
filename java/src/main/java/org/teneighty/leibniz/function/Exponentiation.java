@@ -138,7 +138,7 @@ public final class Exponentiation
 	 * @see org.teneighty.leibniz.Differentiable#expression(org.teneighty.leibniz.Context)
 	 */
 	@Override
-	public Expression expression(Context codeContext)
+	public Expression expression(final Context codeContext)
 	{
 		Expression baseExpression = codeContext.getExpression(base);
 		Expression indexExpression = codeContext.getExpression(index);

@@ -25,19 +25,69 @@ package org.teneighty.leibniz.compilation;
 
 
 /**
- * Simple code generator interface.
- * 
- * @param <TUncompiled> The uncompiled type.
+ * Source code compilation unit.
  */
-interface CodeGenerator<TUncompiled>
+class SourceCodeUnit
 {
 	
 	/**
-	 * Generate source code for the specified uncompiled object.
-	 * 
-	 * @param uncompiled The uncompiled object.
-	 * @return Source code.
+	 * Simple class name.
 	 */
-	public SourceCodeUnit getSourceCodeUnit(TUncompiled uncompiled);
+	private String simpleClassName;
 	
+	/**
+	 * Source code.
+	 */
+	private String sourceCode;
+	
+	/**
+	 * Get the simple class name.
+	 * 
+	 * @return The simple name.
+	 */
+	public String getSimpleClassName()
+	{
+		return simpleClassName;
+	}
+	
+	/**
+	 * Set the simple class name.
+	 * 
+	 * @param simpleClassName The simple name.
+	 */
+	public void setSimpleClassName(final String simpleClassName)
+	{
+		this.simpleClassName = simpleClassName;
+	}
+	
+	/**
+	 * Get the fully qualified class name.
+	 * 
+	 * @return The fully qualified class name.
+	 */
+	public String getFullyQualifiedClassName()
+	{
+		return String.format("org.teneighty.leibniz.compilation.%1$s", simpleClassName);
+	}
+
+	/**
+	 * Get the source code.
+	 * 
+	 * @return The source code.
+	 */
+	public String getSourceCode()
+	{
+		return sourceCode;
+	}
+
+	/**
+	 * Set the source code.
+	 * 
+	 * @param sourceCode The source code.
+	 */
+	public void setSourceCode(final String sourceCode)
+	{
+		this.sourceCode = sourceCode;
+	}
+
 }

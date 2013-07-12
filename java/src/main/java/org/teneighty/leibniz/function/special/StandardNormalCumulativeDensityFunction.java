@@ -27,13 +27,13 @@ import java.io.Serializable;
 
 import org.teneighty.leibniz.AbstractComposedDifferentiable;
 import org.teneighty.leibniz.Assignment;
-import org.teneighty.leibniz.Constant;
 import org.teneighty.leibniz.Context;
 import org.teneighty.leibniz.Differentiable;
 import org.teneighty.leibniz.Differentiables;
 import org.teneighty.leibniz.Variable;
 import org.teneighty.leibniz.compilation.expression.Expression;
 import org.teneighty.leibniz.compilation.expression.StaticMethodCallExpression;
+
 
 /**
  * Normal cumulative density function.
@@ -56,11 +56,6 @@ public final class StandardNormalCumulativeDensityFunction
 	 */
 	public static Differentiable cdf(final Differentiable argument)
 	{
-		if(argument.isZero())
-		{
-			return new Constant(.5d);
-		}
-
 		return new StandardNormalCumulativeDensityFunction(argument);
 	}
 
@@ -81,7 +76,7 @@ public final class StandardNormalCumulativeDensityFunction
 		{
 			// A & G works only for x > 1, so use symmetry of 
 			// normal CDF.
-			return (1d - cdf(x));
+			return (1d - cdf(-x));
 		}
 		
 		final double b0 = 0.2316419;

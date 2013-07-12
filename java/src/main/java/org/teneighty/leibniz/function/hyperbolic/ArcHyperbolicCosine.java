@@ -73,7 +73,9 @@ public final class ArcHyperbolicCosine
 	public static double arccosh(final double x)
 	{
 		// use logarithmic definition.
-		return Math.log(x + Math.sqrt(x + 1) * Math.sqrt(x - 1));
+		double arccosh = Math.log(x + Math.sqrt(x + 1) * Math.sqrt(x - 1));
+		
+		return arccosh;
 	}
 
 	/**

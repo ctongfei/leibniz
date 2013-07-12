@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
-import org.teneighty.leibniz.compilation.expression.ConstantExpression;
+import org.teneighty.leibniz.compilation.expression.ConstantDoubleExpression;
 import org.teneighty.leibniz.compilation.expression.Expression;
 
 
@@ -102,7 +102,7 @@ public final class Constant
 	@Override
 	public Expression expression(final Context codeContext)
 	{
-		return new ConstantExpression(value);
+		return new ConstantDoubleExpression(value);
 	}
 	
 	// proper overrides.

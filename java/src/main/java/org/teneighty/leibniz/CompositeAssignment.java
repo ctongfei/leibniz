@@ -21,23 +21,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz.compilation;
+package org.teneighty.leibniz;
 
 
 /**
- * Simple code generator interface.
- * 
- * @param <TUncompiled> The uncompiled type.
+ * A composite assignment.
  */
-interface CodeGenerator<TUncompiled>
+public class CompositeAssignment
+	implements Assignment
 {
+
+	/**
+	 * Underlying assignments.
+	 */
+	private final Assignment[] assignments;
 	
 	/**
-	 * Generate source code for the specified uncompiled object.
+	 * Constructor.
 	 * 
-	 * @param uncompiled The uncompiled object.
-	 * @return Source code.
+	 * @param assignments Assignments to compose.
 	 */
-	public SourceCodeUnit getSourceCodeUnit(TUncompiled uncompiled);
+	public CompositeAssignment(final Assignment... assignments)
+	{
+		this.assignments = assignments;
+	}
 	
+	/**
+	 * @see org.teneighty.leibniz.Assignment#get(org.teneighty.leibniz.Variable)
+	 */
+	@Override
+	public double get(final Variable variable)
+		throws IllegalArgumentException, NullPointerException
+	{
+		for(Assignment assignment : assignments)
+		{
+			if(assignment.isSet(variable))
+			{
+				return assignment.get(variable);
+			}
+		}
+
+		throw new IllegalArgumentException(variable.name());
+	}
+	
+	/**
+	 * @see org.teneighty.leibniz.Assignment#isSet(org.teneighty.leibniz.Variable)
+	 */
+	@Override
+	public boolean isSet(final Variable variable)
+		throws NullPointerException
+	{
+		for(Assignment assignment : assignments)
+		{
+			if(assignment.isSet(variable))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 }

@@ -32,7 +32,7 @@ import org.teneighty.leibniz.compilation.expression.VariableValueFromAssignmentE
 
 
 /**
- * A variable or free parameter.
+ * A variable.
  */
 public final class Variable
 	extends AbstractDifferentiable
@@ -48,12 +48,24 @@ public final class Variable
 	 * The name of this variable.
 	 */
 	private final String name;
-
+	
 	/**
-	 * @param name
+	 * Constructor.
+	 *  
+	 * @param name The variable name.
 	 */
 	public Variable(final String name)
 	{
+		if(name == null)
+		{
+			throw new NullPointerException("name");
+		}
+		
+		if(name.isEmpty())
+		{
+			throw new IllegalArgumentException("name");
+		}
+		
 		this.name = name;
 	}
 	
@@ -66,7 +78,7 @@ public final class Variable
 	{
 		return name;
 	}
-
+	
 	/**
 	 * @see org.teneighty.leibniz.Differentiable#value(org.teneighty.leibniz.Assignment)
 	 */
@@ -131,7 +143,7 @@ public final class Variable
 		if(other instanceof Variable)
 		{
 			Variable that = (Variable)other;
-			return name.equals(that.name);
+			return (that.compareTo(this) == 0);
 		}
 		
 		return false;
@@ -164,5 +176,14 @@ public final class Variable
 		
 		return name.compareTo(other.name);
 	}	
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 
 }

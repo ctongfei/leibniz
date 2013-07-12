@@ -21,23 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
  * SOFTWARE.  
  */ 
-package org.teneighty.leibniz.compilation;
+package org.teneighty.leibniz;
 
 
 /**
- * Simple code generator interface.
- * 
- * @param <TUncompiled> The uncompiled type.
+ * Base class for Hessian value implementations.
  */
-interface CodeGenerator<TUncompiled>
+public abstract class AbstractHessianValue
+	implements HessianValue
 {
-	
+
 	/**
-	 * Generate source code for the specified uncompiled object.
-	 * 
-	 * @param uncompiled The uncompiled object.
-	 * @return Source code.
+	 * @see org.teneighty.leibniz.HessianValue#value(org.teneighty.leibniz.Variable, org.teneighty.leibniz.Variable)
 	 */
-	public SourceCodeUnit getSourceCodeUnit(TUncompiled uncompiled);
-	
+	@Override
+	public double value(final Variable first, final Variable second)
+	{
+		HessianKey key = new HessianKey(first, second);
+		double value = value(key);
+		
+		return value;
+	}
+
 }

@@ -25,7 +25,7 @@ package org.teneighty.leibniz;
 
 
 /**
- * Compiled gradient interface.
+ * Compiled gradient.
  */
 public interface CompiledGradient
 	extends Gradient, Compiled<Gradient>

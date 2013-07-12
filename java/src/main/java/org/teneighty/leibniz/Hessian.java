@@ -25,41 +25,53 @@ package org.teneighty.leibniz;
 
 import java.util.Set;
 
+
 /**
- * The gradient of a scalar function.
+ * The Hessian of a scalar function.
  */
-public interface Gradient
+public interface Hessian
 {
 	
 	/**
-	 * Get the value of this gradient given the specified assignment.
+	 * Get the value of this Hessian given the specified assignment.
 	 * 
 	 * @param assignment The assignment.
 	 * @return The value.
 	 */
-	public GradientValue value(Assignment assignment);
+	public HessianValue value(Assignment assignment);
 	
 	/**
-	 * Get the differentiable of which this is the gradient.
+	 * Get the differentiable of which this is the Hessian.
 	 * 
 	 * @return Said differentiable.
 	 */
 	public Differentiable differentiable();
 	
 	/**
-	 * Get the differentiable for the specified component.
+	 * Get the differentiable for the specified components.
 	 * 
-	 * @param component The component.
-	 * @return The component.
+	 * @param first The first variable.
+	 * @param second The second variable.
+	 * @return The differentiable in question.
 	 */
-	public Differentiable component(Variable component);
+	public Differentiable component(Variable first, Variable second);
+	
+	/**
+	 * Get the component for the specified key.
+	 * 
+	 * @param key The key.
+	 * @return The component for the specified key.
+	 */
+	public Differentiable component(HessianKey key);
 		
 	/**
-	 * Compile this gradient.
+	 * Compile this Hessian.
 	 * 
-	 * @return A compiled gradient.
+	 * @return A compiled Hessian.
 	 */
-	public CompiledGradient compile();
+	public CompiledHessian compile();
+	
+	// variables accessors.
 	
 	/**
 	 * Get the variables.
@@ -67,5 +79,12 @@ public interface Gradient
 	 * @return The variables.
 	 */
 	public Set<Variable> variables();
+	
+	/**
+	 * Get the key set.
+	 * 
+	 * @return The key set.
+	 */
+	public Set<HessianKey> keys();	
 
 }

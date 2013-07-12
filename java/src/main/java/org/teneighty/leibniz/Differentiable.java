@@ -29,7 +29,7 @@ import org.teneighty.leibniz.compilation.expression.Expression;
 
 
 /**
- * A differentiable function.
+ * A multivariate, real, differentiable function.
  * <p>
  * This is the core interface of the Leibniz package.
  */
@@ -45,7 +45,7 @@ public interface Differentiable
 	 * @return The value.
 	 */
 	public double value(Assignment assignment);
-	
+		
 	/**
 	 * Take the partial derivative with respect to specified variable.
 	 * 
@@ -61,13 +61,28 @@ public interface Differentiable
 	 * @return The partial derivative.
 	 */
 	public Differentiable derivative(Variable... withRespectTo);
-	
+
 	/**
-	 * Compute the gradient of this function.
+	 * Get the gradient of this function.
 	 * 
-	 * @return The gradient.
+	 * @return The gradient of this function.
 	 */
 	public Gradient gradient();
+
+	/**
+	 * Get the gradient of this function, for the specified variables only.
+	 * 
+	 * @param variables The variables.
+	 * @return The gradient of this function.
+	 */
+	public Gradient gradient(Set<Variable> variables);
+	
+	/**
+	 * Construct the Hessian of this function.
+	 * 
+	 * @return The Hessian
+	 */
+	public Hessian hessian();
 		
 	/**
 	 * Get all variables of this differentiable.
@@ -75,7 +90,7 @@ public interface Differentiable
 	 * @return The set of variables.
 	 */
 	public Set<Variable> variables();
-	
+			
 	// simplification helpers.
 	
 	/**
@@ -196,6 +211,13 @@ public interface Differentiable
 	public Differentiable squared();
 	
 	/**
+	 * Cube this differentiable.
+	 * 
+	 * @return <code>this<sup>3</sup></code>
+	 */
+	public Differentiable cubed();
+	
+	/**
 	 * Raise this differentiable to the index.
 	 * 
 	 * @param index The index.
@@ -236,10 +258,13 @@ public interface Differentiable
 	 */
 	public CompiledDifferentiable compile();
 	
-	// compilation interface.
+	// internal compilation interface.
 	
 	/**
 	 * Get a Java expression for the value of this differentiable.
+	 * <p>
+	 * In general, this method should not be called by user-facing code; it is a
+	 * method internal to the code generation framework.
 	 * 
 	 * @param codeContext The code context.
 	 * @return A Java expression for the value of this differentiable.

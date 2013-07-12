@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.teneighty.leibniz.HessianKey;
 import org.teneighty.leibniz.Variable;
 import org.teneighty.leibniz.compilation.statement.LocalDoubleDeclarationStatement;
 import org.teneighty.leibniz.compilation.statement.SnippetStatement;
@@ -39,7 +40,7 @@ import org.teneighty.leibniz.compilation.statement.Statement;
 /**
  * Generates code for gradient method body.
  */
-final class GradientMethodBodyStatementGenerator
+final class HessianMethodBodyStatementGenerator
 {
 
 	/**
@@ -53,7 +54,7 @@ final class GradientMethodBodyStatementGenerator
 	 * @param differentiableExpressions Expressions for the gradient component
 	 *            differentiables.
 	 */
-	GradientMethodBodyStatementGenerator(final LinkedHashMap<Variable, List<ReferenceExpression>> differentiableExpressions)
+	HessianMethodBodyStatementGenerator(final LinkedHashMap<HessianKey, List<ReferenceExpression>> differentiableExpressions)
 	{
 		statements = new ArrayList<Statement>();
 		generateStatements(differentiableExpressions);
@@ -70,19 +71,21 @@ final class GradientMethodBodyStatementGenerator
 	}
 
 	/**
+	 * Generate statements for the specified expression map.
 	 * 
-	 * @param differentiableExpressions
+	 * @param differentiableExpressions The expressions.
 	 */
-	private void generateStatements(final LinkedHashMap<Variable, List<ReferenceExpression>> differentiableExpressions)
+	private void generateStatements(final LinkedHashMap<HessianKey, List<ReferenceExpression>> differentiableExpressions)
 	{
 		// hacky.
-		statements.add(new SnippetStatement("MutableGradientValue value = new MutableGradientValue();"));
+		statements.add(new SnippetStatement("MutableHessianValue value = new MutableHessianValue();"));
 		
+		// expressions for which we've already added a local variable.
 		Set<ReferenceExpression> added = new HashSet<ReferenceExpression>();
 		
-		for(Map.Entry<Variable, List<ReferenceExpression>> entry : differentiableExpressions.entrySet())
+		for(Map.Entry<HessianKey, List<ReferenceExpression>> entry : differentiableExpressions.entrySet())
 		{
-			Variable variable = entry.getKey();
+			HessianKey key = entry.getKey();
 			List<ReferenceExpression> expressions = entry.getValue();
 			
 			for(int index = 0; index < expressions.size(); index++)
@@ -91,7 +94,7 @@ final class GradientMethodBodyStatementGenerator
 
 				if((reference.getReferenceCount() > 1) && (added.contains(reference) == false))
 				{
-					// always add local, even if last expression.
+					// always add a local in this case...
 					LocalDoubleDeclarationStatement lds = new LocalDoubleDeclarationStatement(reference.getVariableName(), reference.referent());
 					statements.add(lds);
 					added.add(reference);
@@ -99,8 +102,11 @@ final class GradientMethodBodyStatementGenerator
 				
 				if(index == (expressions.size() - 1))
 				{
+					Variable first = key.first();
+					Variable second = key.second();
+					
 					// hack into the result map.
-					String putSnippet = String.format("value.set(new Variable(\"%1$s\"), %2$s);", variable.name(), reference.code());
+					String putSnippet = String.format("value.set(new Variable(\"%1$s\"), new Variable(\"%2$s\"), %3$s);", first.name(), second.name(), reference.code());
 					statements.add(new SnippetStatement(putSnippet));
 				}
 			}

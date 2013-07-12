@@ -29,6 +29,8 @@ import static org.teneighty.leibniz.Differentiables.normCdf;
 import static org.teneighty.leibniz.Differentiables.sqrt;
 
 import org.teneighty.leibniz.Assignment;
+import org.teneighty.leibniz.CompiledGradient;
+import org.teneighty.leibniz.CompiledHessian;
 import org.teneighty.leibniz.Differentiable;
 import org.teneighty.leibniz.MutableAssignment;
 import org.teneighty.leibniz.Variable;
@@ -82,17 +84,23 @@ public final class BlackScholes
 		double value = blackScholes.value(OptionType.CALL, underlying, strike, riskFreeRate, timeToExpiry, volatility);
 		double delta = blackScholes.delta(OptionType.CALL, underlying, strike, riskFreeRate, timeToExpiry, volatility);
 		double gamma = blackScholes.gamma(OptionType.CALL, underlying, strike, riskFreeRate, timeToExpiry, volatility);
-
+		double theta = blackScholes.theta(OptionType.CALL, underlying, strike, riskFreeRate, timeToExpiry, volatility);
+		
 		System.out.println(value);
 		System.out.println(delta);
 		System.out.println(gamma);
+		System.out.println(theta);		
 		
-		System.out.println(blackScholes.callValue.derivative(blackScholes.s, blackScholes.s).compile().source());
+		Assignment assignment = blackScholes.assignment(underlying, strike, riskFreeRate, timeToExpiry, volatility);
+		CompiledGradient gradient = blackScholes.callValue.gradient().compile();
+		CompiledHessian hessian = blackScholes.callValue.hessian().compile();
 		
+		System.out.println(gradient.value(assignment));
+		System.out.println(hessian.value(assignment));		
 	}
 
 	/**
-	 * Stock price.
+	 * Underlying price.
 	 */
 	private final Variable s = new Variable("s");
 
@@ -219,6 +227,28 @@ public final class BlackScholes
 	}
 
 	/**
+	 * Get the theta.
+	 * 
+	 * @param type The option type.
+	 * @param underlying The underlying price.
+	 * @param strike The strike price.
+	 * @param riskFreeRate Risk free interest rate.
+	 * @param timeToExpiry Time to expiry in years.
+	 * @param volatility The volatility.
+	 * @return The gamma.
+	 */	
+	public double theta(final OptionType type, final double underlying,
+			final double strike, final double riskFreeRate,
+			final double timeToExpiry, final double volatility)
+	{
+		Differentiable thetaFormula = getValueFormula(type).derivative(t);		
+		double theta = -evaluate(thetaFormula, underlying, strike, riskFreeRate, timeToExpiry, volatility);
+
+		return theta;
+	}
+
+
+	/**
 	 * Evaluate the specified option pricing function given the specified
 	 * inputs.
 	 * 
@@ -240,7 +270,7 @@ public final class BlackScholes
 
 		return value;
 	}
-
+	
 	/**
 	 * Convert the variables to a Leibniz assignment.
 	 * 
