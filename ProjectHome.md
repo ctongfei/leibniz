@@ -1,0 +1,1 @@
+Leibniz is a Java library that performs automatic differentiation. A Scala wrapper is also available.
